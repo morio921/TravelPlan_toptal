@@ -1,7 +1,7 @@
 const express = require('express');
 const recordController = require('../controllers/record.controller');
 const ROLES = require('../constants/role');
-const checkRole = require('../services/checkRoles.service');
+const checkRole = require('../utils/checkRoles');
 
 const router = express.Router();
 router.use(checkRole.checkRoles([ROLES.ADMIN, ROLES.USER]));
