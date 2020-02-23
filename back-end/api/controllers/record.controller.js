@@ -1,12 +1,15 @@
-const mongoose = require('mongoose');
 const Record = require('../models/record.model');
 const ROLES = require('../constants/role');
+const APIError = require('../utils/api-error');
 
 function create(req, res, next) {
   const recordItem = new Record(req.body);
 
   recordItem.save()
     .then((newRecordItem) => {
+      if (!newRecordItem) {
+        return new APIError('Record not created', 404);
+      }
       res.json(newRecordItem);
     })
     .catch(next);
@@ -17,6 +20,9 @@ function update(req, res, next) {
 
   req.record.save()
     .then((updatedRecordItem) => {
+      if (!updatedRecordItem) {
+        return new APIError('Record not created', 404);
+      }
       res.json(updatedRecordItem);
     })
     .catch(next);
@@ -35,6 +41,9 @@ function list(req, res, next) {
   Record.find(query)
     .populate('user')
     .then((recordList) => {
+      if (!recordList) {
+        return new APIError('Record not created', 404);
+      }
       res.json(recordList);
     })
     .catch(next);
@@ -51,13 +60,11 @@ function getRecordById(req, res, next, id) {
   Record.findById(id)
     .then((recordItem) => {
       if (!recordItem) {
-        res.status(404).json({ message: 'Record not found' });
-        return;
+        return new APIError('Record not created', 404);
       }
 
       if(recordItem.user.toString() !== req.user._id && req.user.role !== ROLES.ADMIN) {
-        res.status(403).json({ message: 'User is not authorized to access this record' });
-        return;
+        return new APIError('User is not authorized to access this record', 403);
       }
 
       req.record = record;

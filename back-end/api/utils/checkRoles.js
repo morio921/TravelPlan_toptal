@@ -1,3 +1,5 @@
+const APIError = require('./api-error');
+
 function checkRoles(roles) {
   return (req, res, next) => {
     if (roles.indexOf(req.user.role) > -1) {
@@ -5,7 +7,7 @@ function checkRoles(roles) {
       return;
     }
 
-    res.status(401).json({ message: 'User is not authorized' });
+    throw new APIError('User is not authorized', 401);
   };
 }
 

@@ -1,10 +1,13 @@
 const User = require('../models/user.model');
 const ROLES = require('../constants/role');
+const APIError = require('../utils/api-error');
 
 function create(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
-  console.error("user create");
+  if (!firstName || !lastName || !email || !password || !role) {
+    return new APIError('firstName or lastName or email or password or role are required', 401);
+  }
 
   const user = new User({
     firstName, lastName, email, password
@@ -16,6 +19,9 @@ function create(req, res, next) {
 
   user.save()
     .then((newUserItem) => {
+      if (!newUserItem) {
+        return new APIError('User not created', 404);
+      }
       res.json(newUserItem);
     })
     .catch(next);
@@ -38,6 +44,9 @@ function update(req, res, next) {
 
   req.userModel.save()
     .then((updatedUserItem) => {
+      if (!updatedUserItem) {
+        return new APIError('User not created', 404);
+      }
       res.json(updatedUserItem);
     })
     .catch(next);
@@ -55,6 +64,9 @@ function list(req, res, next) {
 
   User.find(query)
     .then((userList) => {
+      if (!userList) {
+        return new APIError('User not created', 404);
+      }
       res.json(userList);
     })
     .catch(next);
@@ -71,8 +83,7 @@ function getUserByID(req, res, next, id) {
   User.findById(id)
   .then((userItem) => {
     if (!userItem) {
-      res.status(404).json({ message: 'User not found' });
-      return;
+      return new APIError('User not created', 404);
     }
     req.userModel = userItem;
     next();
@@ -84,8 +95,7 @@ function getProfile(req, res, next) {
   User.findById(req.user._id)
   .then((userItem) => {
     if (!userItem) {
-      res.status(404).json({ message: 'User not found' });
-      return;
+      return new APIError('User not created', 404);
     }
     req.userModel = userItem;
     next();

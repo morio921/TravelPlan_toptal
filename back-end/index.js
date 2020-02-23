@@ -4,6 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const APIError = require('./api/utils/api-error');
+
 const initializeDB = require('./api/mongoose');
 
 // initialize db on the top to have models available below
@@ -27,7 +29,8 @@ app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  // next(createError(404));
+  next(new APIError('API not Found', 404));
 });
 
 // error handler
