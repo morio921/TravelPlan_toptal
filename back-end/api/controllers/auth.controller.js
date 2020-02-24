@@ -27,7 +27,7 @@ function signIn(req, res, next) {
           }, config.jwtSecret, { expiresIn: config.jwtExpires });
 
           res.json({
-            _id, firstName, lastName, email, role, token,
+            info: { _id, firstName, lastName, email, role }, token,
           });
         })
         .catch(() => {
