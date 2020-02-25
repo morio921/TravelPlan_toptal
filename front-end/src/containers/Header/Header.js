@@ -11,6 +11,8 @@ import {
   Nav,
   NavItem
 } from 'reactstrap';
+import { FaSignOutAlt } from 'react-icons/fa';
+import { canManageUsers } from '../../helpers/roleHelpers';
 import { signout } from '../../redux/modules/auth';
 
 class Header extends React.Component {
@@ -52,8 +54,13 @@ class Header extends React.Component {
               <NavItem>
                 <Link to='/dashboard' className='nav-link'>Dashboard</Link>
               </NavItem>
+              {canManageUsers(auth.me) && <NavItem>
+                <Link to='/users' className='nav-link'>Users</Link>
+              </NavItem>}
               <NavItem>
-                <Link to='/' onClick={this.handleLogout} className='nav-link'>Logout</Link>
+                <Link to='/' onClick={this.handleLogout} className='nav-link'>
+                  <FaSignOutAlt />
+                </Link>
               </NavItem>
             </Nav>
             : <Nav className="ml-auto" navbar>

@@ -5,8 +5,8 @@ import {
   Button,
   Col,
   Form,
-  Row,
   FormGroup,
+  Row,
   Input,
   Label
 } from 'reactstrap';
@@ -15,13 +15,35 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { authStateSelector } from '../../../redux/selectors';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { createUser, getUser, updateUser, CREATE_USER, UPDATE_USER } from '../../../redux/modules/user';
 import { ucFirst } from '../../../helpers';
-import { requestFail } from '../../../redux/api/request';
-import { signup, DO_SIGNUP } from '../../../redux/modules/auth';
-import './Signup.css';
+import { requestFail, requestSuccess } from '../../../redux/api/request';
+import * as selectors from '../../../redux/selectors';
 
-const SignupSchema = Yup.object().shape({
+const roleOptions = [
+  {
+    value: 'user',
+    label: 'User',
+  },
+  {
+    value: 'manager',
+    label: 'User_Manager',
+  },
+  {
+    value: 'admin',
+    label: 'Admin',
+  }
+];
+
+const requestIsFailed = ({ status }) =>
+  status === requestFail(CREATE_USER) || status === requestFail(UPDATE_USER)
+
+const requestIsSuccess = ({ status }) =>
+  status === requestSuccess(CREATE_USER) || status === requestSuccess(UPDATE_USER)
+
+const UserAddSchema = Yup.object().shape({
   firstName: Yup.string()
     .min(2, 'First name is too short')
     .max(50, 'First name is too long')
@@ -43,53 +65,72 @@ const SignupSchema = Yup.object().shape({
     .required('This field is required'),
 });
 
-class Signup extends Component {
+class UserEdit extends Component {
   static propTypes = {
-    auth: PropTypes.object,
-    handleSubmit: PropTypes.func,
+    createUser: PropTypes.func,
+    getUser: PropTypes.func,
     history: PropTypes.object,
-    signup: PropTypes.func
+    initialValues: PropTypes.object,
+    profile: PropTypes.object,
+    updateUser: PropTypes.func,
+    userState: PropTypes.object,
   };
 
-  handleSignup = (values) => {
-    const { history, signup } = this.props;
-    signup({
+  constructor(props) {
+    super(props);
+
+    const { getUser, match: { params } } = this.props;
+    params.id && getUser({ id: params.id });
+  }
+
+  handleSave = (values) => {
+    const { createUser, updateUser, match: { params }, history } = this.props;
+    params.id
+    ? updateUser({
+      id: params.id,
+      body: values
+    })
+    : createUser({
       body: values,
-      success: () => {
-        history.push('/');
-      }
-    });
+      success: () => history.push('/users')
+    })
   }
 
   get errorText () {
-    const { auth: { error } } = this.props;
+    const { userState: { error } } = this.props
     return error
     ? Object.keys(error.data).map((key) => (
       <div key={key}>{ucFirst(error.data[key].toString())}</div>
     ))
-    : '';
+    : ''
   }
 
   render() {
-    const { auth } = this.props;
+    const { userState, match: { params } } = this.props;
 
     return (
       <Row>
-        <Col sm={12} md={{ size: 6, offset: 3 }}>
-          {auth.status === requestFail(DO_SIGNUP) &&
+        <Col sm={12} md={{ size: 4, offset: 4 }}>
+          {requestIsFailed(userState) &&
             <Alert color='danger'>{this.errorText}</Alert>
           }
-          <h2 className='text-center mb-5'>New User Signup</h2>
+          {requestIsSuccess(userState) &&
+            <Alert color='success'>Updated successfully!</Alert>
+          }
+          <h2 className='text-center mb-5'>
+            {params.id ? 'Edit User' : 'Add New User'}
+          </h2>
           <Formik
             initialValues = {{
               firstName: '',
               lastName: '',
               email: '',
+              role: '',
               password: '',
               confirm_password: ''
             }}
-            validationSchema={SignupSchema}
-            onSubmit={this.handleSignup}
+            validationSchema={UserAddSchema}
+            onSubmit={this.handleSave}
           >
             {formik => (
               <Form onSubmit={formik.handleSubmit}>
@@ -149,7 +190,30 @@ class Signup extends Component {
                 </Row>
 
                 <Row>
-                  <Col sm={6} xs={12}>
+                  <Col xs={12}>
+                    <FormGroup>
+                      <Label for='role'>Role</Label><br />
+                      <Input
+                        id='role'
+                        name='role'
+                        type='select'
+                        value={formik.values.role}
+                        {...formik.getFieldProps('role')}
+                      >
+                        {roleOptions.map((roleItem, key) => (
+                          <option value={roleItem.value} key={key}>{roleItem.label}</option>
+                        ))}
+                      </Input>
+                      {formik.errors.role && formik.touched.role ? (
+                        <div className='error-message'>{formik.errors.role}</div>
+                      ) : null}
+                    </FormGroup>
+                  </Col>
+                </Row>
+                {!params.id &&
+                (<>
+                <Row>
+                  <Col xs={12}>
                     <FormGroup>
                       <Label for='password'>Password</Label><br />
                       <Input
@@ -165,8 +229,10 @@ class Signup extends Component {
                       ) : null}
                     </FormGroup>
                   </Col>
+                </Row>
 
-                  <Col sm={6} xs={12}>
+                <Row>
+                  <Col xs={12}>
                     <FormGroup>
                       <Label for='confirm_password'>Confirm Password</Label><br />
                       <Input
@@ -183,7 +249,18 @@ class Signup extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Button color='primary' type='submit'>Signup</Button>
+                </>)}
+
+                <Row>
+                  <Col xs={6}>
+                    <Link to='/users' className='btn btn-secondary'>
+                      Cancel
+                    </Link>
+                  </Col>
+                  <Col className='text-right'>
+                    <Button color='primary' type='submit'>Save</Button>
+                  </Col>
+                </Row>
               </Form>
             )}
           </Formik>
@@ -194,13 +271,19 @@ class Signup extends Component {
 }
 
 const selector = createStructuredSelector({
-  auth: authStateSelector
+  profile: selectors.profileSelector,
+  initialValues: (state, props) =>
+    props.match.params.id ? selectors.userDetailSelector(state) : {},
+  userState: selectors.userStateSelector,
 })
 
 const actions = {
-  signup
+  createUser,
+  getUser,
+  updateUser
 }
 
 export default compose(
-  connect(selector, actions)
-)(Signup)
+  connect(selector, actions),
+  withRouter
+)(UserEdit)

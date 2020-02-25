@@ -6,9 +6,11 @@ import Dashboard from './dashboard';
 import Header from '../containers/Header';
 import Signin from './auth/Signin';
 import Signup from './auth/Signup';
+import Users from './user/Users';
 import {
   userIsAuthenticatedRedir,
-  userIsNotAuthenticatedRedir
+  userIsNotAuthenticatedRedir,
+  userIsAdminOrManagerRedir
 } from '../helpers/authHelpers';
 import '../styles/core.css';
 
@@ -27,6 +29,9 @@ const routes = ({ isAuthenticated }) => (
         <Route path='/signin' component={userIsNotAuthenticatedRedir(Signin)} />
         <Route path='/signup' component={userIsNotAuthenticatedRedir(Signup)} />
         <Route path='/dashboard' component={userIsAuthenticatedRedir(Dashboard)} />
+        <Route path='/users' component={userIsAuthenticatedRedir(
+          userIsAdminOrManagerRedir(Users)
+        )} />
       </Container>
     </div>
   </Router>

@@ -5,8 +5,8 @@ const APIError = require('../utils/api-error');
 function create(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !role) {
-    return new APIError('firstName or lastName or email or password or role are required', 401);
+  if (!firstName || !lastName || !email  || !password || !role) {
+    return new APIError('Firstname, lastname, email, password, or role are required', 401);
   }
 
   const user = new User({
@@ -38,7 +38,7 @@ function update(req, res, next) {
     req.userModel.password = password;
   }
 
-  if (req.user.role === ROLES.ADMIN && role) {
+  if ((req.user.role === ROLES.ADMIN || req.user.role === ROLES.USER_MANAGER) && role) {
     req.userModel.role = role;
   }
 
@@ -57,17 +57,22 @@ function read(req, res) {
 }
 
 function list(req, res, next) {
+  const page_size = parseInt(req.params.page_size);
+  const page = parseInt(req.params.page);
+
   let query = {};
   if (req.user.role === ROLES.MANAGER) {
-    query = { role: { $ne: ROLES.ADMIN } };
+    query = { role: { $ne: ROLES.ADMIN } };   //For getting users except admin users
   }
 
   User.find(query)
+    .skip((page - 1) * page_size)
+    .limit(page_size)
     .then((userList) => {
       if (!userList) {
         return new APIError('User not created', 404);
       }
-      res.json(userList);
+      res.json({"results": userList});
     })
     .catch(next);
 }

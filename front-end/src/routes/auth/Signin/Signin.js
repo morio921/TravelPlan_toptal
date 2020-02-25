@@ -71,7 +71,7 @@ class Signin extends Component {
                     {...formik.getFieldProps('email')}
                   />
                   {formik.errors.email && formik.touched.email ? (
-                    <div className='error-message'>{formik.errors.email}</div>
+                    <div className='error-message danger'>{formik.errors.email}</div>
                   ) : null}
                 </FormGroup>
 
@@ -86,7 +86,7 @@ class Signin extends Component {
                     {...formik.getFieldProps('password')}
                   />
                   {formik.errors.password && formik.touched.password ? (
-                    <div className='error-message'>{formik.errors.password}</div>
+                    <div className='error-message danger'>{formik.errors.password}</div>
                   ) : null}
                 </FormGroup>
                 <Button color='primary' type='submit'>Signin</Button>

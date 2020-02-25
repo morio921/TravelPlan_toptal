@@ -41,7 +41,7 @@ function signUp(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
 
   if (!firstName || !lastName || !email || !password) {
-    return new APIError('firstName or lastName or email or password are required', 401);
+    return new APIError('Firstname, lastname, email, and password are required', 401);
   }
 
   const userItem = new User({
