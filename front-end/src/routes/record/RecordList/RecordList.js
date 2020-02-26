@@ -32,7 +32,9 @@ const RecordFilterSchema = Yup.object().shape({
   fromDate: Yup.date(),
   toDate: Yup.date()
     .test('date-compare', 'End date must be later than state date', function(value) {
-      return this.parent.fromDate <= value;
+      if(this.parent.fromDate && value)
+        return this.parent.fromDate <= value;
+      return true;
     })
 });
 
@@ -54,22 +56,27 @@ class RecordList extends Component {
   }
 
   handleDeleteRecord = (id) => () => {
-    const { deleteRecord } = this.props;
+    const { deleteRecord, getRecords, params } = this.props;
     confirm('Are you sure to delete the record?').then(
       () => {
-        deleteRecord({ id })
+        deleteRecord({
+          id,
+          success: () => getRecords({ params })
+        })
       }
     )
   }
   
   handleFilter = (values) => {
-    const { getRecords } = this.props;
+    const { getRecords, params } = this.props;
+    console.log("handleFilter", values);
     getRecords({
       params: {
         userName: values.userName,
         fromDate: getDateStr(values.fromDate),
         toDate: getDateStr(values.toDate),
-        page: 1
+        page: 1,
+        page_size: params.page_size
       }
     })
   }
@@ -78,7 +85,7 @@ class RecordList extends Component {
     const { getRecords, params } = this.props;
     getRecords({
       params: {
-        ...pick(params, ['from', 'to', 'page', 'page_size']),
+        ...pick(params, ['userName', 'fromDate', 'toDate', 'page', 'page_size']),
         ...pagination
       }
     })
@@ -101,8 +108,8 @@ class RecordList extends Component {
             <Formik
               initialValues = {{
                 userName: '',
-                fromDate: moment(new Date()).format('YYYY-MM-DD'),
-                toDate: moment(new Date()).format('YYYY-MM-DD'),
+                fromDate: '',
+                toDate: '',
               }}
               validationSchema={RecordFilterSchema}
               onSubmit={this.handleFilter}
@@ -120,7 +127,7 @@ class RecordList extends Component {
                     />
                   </FormGroup>
                   <FormGroup className='form-group-style'>
-                    <Label for="fromDate">StartDate:</Label>
+                    <Label for="fromDate">From Date:</Label>
                     <Input
                       id='fromDate'
                       type='date'
@@ -130,7 +137,7 @@ class RecordList extends Component {
                     />
                   </FormGroup>
                   <FormGroup className='form-group-style'>
-                    <Label for="toDate">EndDate:</Label>
+                    <Label for="toDate">To Date:</Label>
                     <Input
                       id='toDate'
                       type='date'
@@ -172,7 +179,7 @@ class RecordList extends Component {
             {recordsList && recordsList.map((record, index) => (
               <tr key={index}>
                 <th className='text-center' scope='row'>{index + 1}</th>
-                <td className='text-center'>{record.user.firstName} {record.user.lastName}</td>
+                <td className='text-center'>{record.userName}</td>
                 <td className='text-center'>{record.destination}</td>
                 <td className='text-center'>{moment(record.startDate).format('MM-DD-YYYY')}</td>
                 <td className='text-center'>{moment(record.endDate).format('MM-DD-YYYY')}</td>
@@ -198,7 +205,6 @@ class RecordList extends Component {
 }
 
 const selector = createStructuredSelector({
-  initialValues: recordsParamsSelector,
   recordsList: recordsListSelector,
   params: recordsParamsSelector
 })

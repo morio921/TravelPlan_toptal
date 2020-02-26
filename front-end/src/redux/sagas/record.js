@@ -21,7 +21,7 @@ const doGetRecords = apiCall({
   path: () => `/record/`,
   payloadOnSuccess: (res, { payload }) => ({
     ...res,
-    ...pick(get(payload, 'params', {}), ['from', 'to', 'page', 'page_size']),
+    ...pick(get(payload, 'params', {}), ['userName', 'fromDate', 'toDate', 'page', 'page_size']),
   })
 })
 

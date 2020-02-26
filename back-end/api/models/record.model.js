@@ -19,9 +19,9 @@ const recordSchema = new Schema({
     type: String,
     default: '',
   },
-  user: {
-    type: Schema.ObjectId,
-    ref: 'User',
+  userName: {
+    type: String,
+    default: '',
   },
 }, {
   collection: 'records',

@@ -35,16 +35,25 @@ function read(req, res) {
 async function list(req, res, next) {
   const page_size = parseInt(req.query.page_size);
   const page = parseInt(req.query.page);
+  const { userName, fromDate, toDate } = req.query;
 
   let query = {};
   if (req.user.role === ROLES.USER) {
     query = { user: req.user._id };
   }
 
+  query['userName'] = { $regex: userName ? userName : '', $options: 'i' };
+
+  if(fromDate && toDate)
+    query['startDate'] = { $gte: fromDate, $lte: toDate };
+  else if(fromDate && !toDate)
+    query['startDate'] = { $gte: fromDate };
+  else if(!fromDate && toDate)
+    query['startDate'] = { $lte: toDate };
+
   await Record.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
-    .populate('user')
     .then((recordList) => {
       if (!recordList) {
         return new APIError('Record not created', 404);
