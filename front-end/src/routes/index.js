@@ -7,6 +7,7 @@ import Header from '../containers/Header';
 import Signin from './auth/Signin';
 import Signup from './auth/Signup';
 import Users from './user/Users';
+import Records from './record/Records';
 import {
   userIsAuthenticatedRedir,
   userIsNotAuthenticatedRedir,
@@ -32,6 +33,7 @@ const routes = ({ isAuthenticated }) => (
         <Route path='/users' component={userIsAuthenticatedRedir(
           userIsAdminOrManagerRedir(Users)
         )} />
+        <Route path='/records' component={userIsAuthenticatedRedir(Records)} />
       </Container>
     </div>
   </Router>

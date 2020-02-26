@@ -58,6 +58,9 @@ class Header extends React.Component {
                 <Link to='/users' className='nav-link'>Users</Link>
               </NavItem>}
               <NavItem>
+                <Link to='/records' className='nav-link'>Records</Link>
+              </NavItem>
+              <NavItem>
                 <Link to='/' onClick={this.handleLogout} className='nav-link'>
                   <FaSignOutAlt />
                 </Link>

@@ -7,11 +7,11 @@ const recordSchema = new Schema({
     required: true,
     default: ''
   },
-  start_date: {
+  startDate: {
     type: Date,
     default: new Date(),
   },
-  end_date: {
+  endDate: {
     type: Date,
     default: new Date(),
   },

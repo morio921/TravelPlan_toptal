@@ -8,7 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router';
 import { pick } from 'lodash';
 import { FaUserPlus, FaUserEdit, FaTrash } from 'react-icons/fa';
-import { getUsers, deleteUser } from '../../../redux/modules/user';
+import { getUsers, getUser, deleteUser } from '../../../redux/modules/user';
 import { ucFirst } from '../../../helpers';
 import { usersListSelector, usersParamsSelector, profileSelector } from '../../../redux/selectors';
 import confirm from '../../../components/ConfirmModal';
@@ -18,6 +18,7 @@ class UsersList extends Component {
   static propTypes = {
     deleteUser: PropTypes.func,
     getUsers: PropTypes.func,
+    getUser: PropTypes.func,
     usersList: PropTypes.array,
     profile: PropTypes.object,
     history: PropTypes.object,
@@ -31,12 +32,23 @@ class UsersList extends Component {
   }
 
   handleDeleteUser = (id) => () => {
-    const { deleteUser } = this.props;
-    confirm('Do you really want to delete this use?')
+    const { deleteUser, getUsers, params } = this.props;
+    confirm('Do you really want to delete this user?')
       .then(() => {
-        deleteUser({ id });
+        deleteUser({
+          id,
+          success: () => getUsers({ params })
+        })
       }
     )
+  }
+
+  handleEditUser = (id) => () => {
+    const { getUser, history } = this.props;
+    getUser({
+      id,
+      success: () => history.push(`/users/edit/${id}`)
+    })
   }
 
   handlePagination = (pagination) => {
@@ -58,7 +70,7 @@ class UsersList extends Component {
         <h2 className='text-center mb-5'>Manage Users</h2>
         <div className='text-right mb-2'>
           <Link to='/users/new' className='btn btn-primary'>
-            <FaUserPlus size='1.5em' />
+            <FaUserPlus size='1.2em' /> Add User
           </Link>
         </div>
         <Table striped>
@@ -80,7 +92,7 @@ class UsersList extends Component {
                 <td>{ucFirst(user.role)}</td>
                 <td className='text-right'>
                   {' '}
-                  <Button color='primary' tag={Link} size='sm' to={`/users/edit/${user._id}`}>
+                  <Button color='primary' size='sm' onClick={this.handleEditUser(user._id)}>
                     <FaUserEdit />
                   </Button>
                   {' '}
@@ -108,6 +120,7 @@ const selector = createStructuredSelector({
 
 const actions = {
   getUsers,
+  getUser,
   deleteUser
 }
 

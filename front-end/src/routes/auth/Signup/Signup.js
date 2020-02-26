@@ -19,7 +19,6 @@ import { authStateSelector } from '../../../redux/selectors';
 import { ucFirst } from '../../../helpers';
 import { requestFail } from '../../../redux/api/request';
 import { signup, DO_SIGNUP } from '../../../redux/modules/auth';
-import './Signup.css';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -106,7 +105,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('firstName')}
                       />
                       {formik.errors.firstName && formik.touched.firstName ? (
-                        <div className='error-message'>{formik.errors.firstName}</div>
+                        <div style={{color: 'red'}}>{formik.errors.firstName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -123,7 +122,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('lastName')}
                       />
                       {formik.errors.lastName && formik.touched.lastName ? (
-                        <div className='error-message'>{formik.errors.lastName}</div>
+                        <div style={{color: 'red'}}>{formik.errors.lastName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -142,7 +141,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('email')}
                       />
                       {formik.errors.email && formik.touched.email ? (
-                        <div className='error-message'>{formik.errors.email}</div>
+                        <div style={{color: 'red'}}>{formik.errors.email}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -157,11 +156,11 @@ class Signup extends Component {
                         name='password'
                         type='password'
                         placeholder='Enter password'
-                        value={formik.values.email}
+                        value={formik.values.password}
                         {...formik.getFieldProps('password')}
                       />
                       {formik.errors.password && formik.touched.password ? (
-                        <div className='error-message'>{formik.errors.password}</div>
+                        <div style={{color: 'red'}}>{formik.errors.password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -174,11 +173,11 @@ class Signup extends Component {
                         name='confirm_password'
                         type='password'
                         placeholder='Enter confirm password'
-                        value={formik.values.email}
+                        value={formik.values.confirm_password}
                         {...formik.getFieldProps('confirm_password')}
                       />
                       {formik.errors.confirm_password && formik.touched.confirm_password ? (
-                        <div className='error-message'>{formik.errors.confirm_password}</div>
+                        <div style={{color: 'red'}}>{formik.errors.confirm_password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>

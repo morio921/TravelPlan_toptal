@@ -70,25 +70,27 @@ class UserEdit extends Component {
     createUser: PropTypes.func,
     getUser: PropTypes.func,
     history: PropTypes.object,
-    initialValues: PropTypes.object,
     profile: PropTypes.object,
     updateUser: PropTypes.func,
     userState: PropTypes.object,
+    handleSubmit: PropTypes.func,
   };
 
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    const { getUser, match: { params } } = this.props;
-    params.id && getUser({ id: params.id });
-  }
+  //   const { getUser, match: { params } } = this.props;
+  //   params.id && getUser({ id: params.id });
+  // }
 
   handleSave = (values) => {
     const { createUser, updateUser, match: { params }, history } = this.props;
+    console.log("handleSave values", values);
     params.id
     ? updateUser({
       id: params.id,
-      body: values
+      body: values,
+      success: () => history.push('/users')
     })
     : createUser({
       body: values,
@@ -118,14 +120,21 @@ class UserEdit extends Component {
             <Alert color='success'>Updated successfully!</Alert>
           }
           <h2 className='text-center mb-5'>
-            {params.id ? 'Edit User' : 'Add New User'}
+            {params.id ? 'Edit User' : 'Add User'}
           </h2>
           <Formik
-            initialValues = {{
+            initialValues = {(params.id && userState.user) ? {
+              firstName: userState.user.firstName,
+              lastName: userState.user.lastName,
+              email: userState.user.email,
+              role: userState.user.role,
+              password: '',
+              confirm_password: ''
+            } : {
               firstName: '',
               lastName: '',
               email: '',
-              role: '',
+              role: 'user',
               password: '',
               confirm_password: ''
             }}
@@ -147,7 +156,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('firstName')}
                       />
                       {formik.errors.firstName && formik.touched.firstName ? (
-                        <div className='error-message'>{formik.errors.firstName}</div>
+                        <div className='danger'>{formik.errors.firstName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -164,7 +173,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('lastName')}
                       />
                       {formik.errors.lastName && formik.touched.lastName ? (
-                        <div className='error-message'>{formik.errors.lastName}</div>
+                        <div className='danger'>{formik.errors.lastName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -183,7 +192,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('email')}
                       />
                       {formik.errors.email && formik.touched.email ? (
-                        <div className='error-message'>{formik.errors.email}</div>
+                        <div className='danger'>{formik.errors.email}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -205,13 +214,12 @@ class UserEdit extends Component {
                         ))}
                       </Input>
                       {formik.errors.role && formik.touched.role ? (
-                        <div className='error-message'>{formik.errors.role}</div>
+                        <div className='danger'>{formik.errors.role}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
-                {!params.id &&
-                (<>
+
                 <Row>
                   <Col xs={12}>
                     <FormGroup>
@@ -221,11 +229,11 @@ class UserEdit extends Component {
                         name='password'
                         type='password'
                         placeholder='Enter password'
-                        value={formik.values.email}
+                        value={formik.values.password}
                         {...formik.getFieldProps('password')}
                       />
                       {formik.errors.password && formik.touched.password ? (
-                        <div className='error-message'>{formik.errors.password}</div>
+                        <div className='danger'>{formik.errors.password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -240,16 +248,15 @@ class UserEdit extends Component {
                         name='confirm_password'
                         type='password'
                         placeholder='Enter confirm password'
-                        value={formik.values.email}
+                        value={formik.values.confirm_password}
                         {...formik.getFieldProps('confirm_password')}
                       />
                       {formik.errors.confirm_password && formik.touched.confirm_password ? (
-                        <div className='error-message'>{formik.errors.confirm_password}</div>
+                        <div className='danger'>{formik.errors.confirm_password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
-                </>)}
 
                 <Row>
                   <Col xs={6}>
@@ -272,9 +279,7 @@ class UserEdit extends Component {
 
 const selector = createStructuredSelector({
   profile: selectors.profileSelector,
-  initialValues: (state, props) =>
-    props.match.params.id ? selectors.userDetailSelector(state) : {},
-  userState: selectors.userStateSelector,
+  userState: selectors.userStateSelector
 })
 
 const actions = {

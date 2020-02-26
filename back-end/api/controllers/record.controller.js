@@ -2,10 +2,10 @@ const Record = require('../models/record.model');
 const ROLES = require('../constants/role');
 const APIError = require('../utils/api-error');
 
-function create(req, res, next) {
+async function create(req, res, next) {
   const recordItem = new Record(req.body);
 
-  recordItem.save()
+  await recordItem.save()
     .then((newRecordItem) => {
       if (!newRecordItem) {
         return new APIError('Record not created', 404);
@@ -15,10 +15,10 @@ function create(req, res, next) {
     .catch(next);
 }
 
-function update(req, res, next) {
+async function update(req, res, next) {
   Object.assign(req.record, req.body);
 
-  req.record.save()
+  await req.record.save()
     .then((updatedRecordItem) => {
       if (!updatedRecordItem) {
         return new APIError('Record not created', 404);
@@ -32,32 +32,40 @@ function read(req, res) {
   res.json(req.record);
 }
 
-function list(req, res, next) {
+async function list(req, res, next) {
+  const page_size = parseInt(req.query.page_size);
+  const page = parseInt(req.query.page);
+
   let query = {};
   if (req.user.role === ROLES.USER) {
     query = { user: req.user._id };
   }
 
-  Record.find(query)
+  await Record.find(query)
+    .skip((page - 1) * page_size)
+    .limit(page_size)
     .populate('user')
     .then((recordList) => {
       if (!recordList) {
         return new APIError('Record not created', 404);
       }
-      res.json(recordList);
+      Record.find(query)
+      .then((newList) => {
+        res.json({"results": recordList, "count": newList.length});
+      })
     })
     .catch(next);
 }
 
-function remove(req, res, next) {
-  req.record.remove(() => {
-    res.json(req.record);
+async function remove(req, res, next) {
+  await req.record.remove(() => {
+    res.json(req.record._id);
   })
   .catch(next);
 }
 
-function getRecordById(req, res, next, id) {
-  Record.findById(id)
+async function getRecordById(req, res, next, id) {
+  await Record.findById(id)
     .then((recordItem) => {
       if (!recordItem) {
         return new APIError('Record not created', 404);
