@@ -35,9 +35,11 @@ export default class Pagination extends Component {
 
   handlePageClick = (page) => () => {
     const { pagination, setPagination } = this.props;
+
     if (page === 'prev') {
       page = Math.max(1, pagination.page - 1);
     }
+    
     if (page === 'next') {
       page = Math.min(getPageCount(pagination), pagination.page + 1);
     }

@@ -43,6 +43,6 @@ const routes = ({ isAuthenticated }) => (
 
 const selector = (state) => ({
   isAuthenticated: !!state.auth.me
-})
+});
 
-export default connect(selector)(routes)
+export default connect(selector)(routes);

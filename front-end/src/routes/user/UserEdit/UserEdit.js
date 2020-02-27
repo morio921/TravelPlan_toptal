@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -9,15 +8,9 @@ import {
   Input,
   Label
 } from 'reactstrap';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
-import { createUser, getUser, updateUser } from '../../../redux/modules/user';
-import * as selectors from '../../../redux/selectors';
 
 const roleOptions = [
   {
@@ -57,16 +50,6 @@ const UserAddSchema = Yup.object().shape({
 });
 
 class UserEdit extends Component {
-  static propTypes = {
-    createUser: PropTypes.func,
-    getUser: PropTypes.func,
-    history: PropTypes.object,
-    profile: PropTypes.object,
-    updateUser: PropTypes.func,
-    userState: PropTypes.object,
-    handleSubmit: PropTypes.func,
-  };
-
   componentDidMount() {
     const { getUser, match: { params } } = this.props;
     params.id && getUser({ id: params.id });
@@ -252,18 +235,4 @@ class UserEdit extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  profile: selectors.profileSelector,
-  userState: selectors.userStateSelector
-});
-
-const actions = {
-  createUser,
-  getUser,
-  updateUser
-};
-
-export default compose(
-  connect(selector, actions),
-  withRouter
-)(UserEdit);
+export default UserEdit;

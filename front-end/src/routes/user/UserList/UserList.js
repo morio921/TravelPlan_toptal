@@ -1,29 +1,21 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Button, Table, UncontrolledTooltip } from 'reactstrap';
+import {
+  Button,
+  Table,
+  UncontrolledTooltip
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { withRouter } from 'react-router';
 import { pick } from 'lodash';
-import { FaUserPlus, FaUserEdit, FaTrash } from 'react-icons/fa';
-import { getUsers, getUser, deleteUser } from '../../../redux/modules/user';
+import {
+  FaUserPlus,
+  FaUserEdit,
+  FaTrash
+} from 'react-icons/fa';
 import { ucFirst } from '../../../helpers';
-import { usersListSelector, usersParamsSelector, profileSelector } from '../../../redux/selectors';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
 
-class UsersList extends Component {
-  static propTypes = {
-    deleteUser: PropTypes.func,
-    getUsers: PropTypes.func,
-    getUser: PropTypes.func,
-    usersList: PropTypes.array,
-    profile: PropTypes.object,
-    history: PropTypes.object,
-  };
-
+class UserList extends Component {
   componentDidMount() {
     const { getUsers, params } = this.props;
     getUsers({ params });
@@ -116,19 +108,4 @@ class UsersList extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  usersList: usersListSelector,
-  params: usersParamsSelector,
-  profile: profileSelector
-});
-
-const actions = {
-  getUsers,
-  getUser,
-  deleteUser
-};
-
-export default compose(
-  connect(selector, actions),
-  withRouter
-)(UsersList);
+export default UserList;

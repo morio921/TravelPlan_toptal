@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.card-style {
+  margin-top: 100px;
+}
+
 .validation-color {
   color: red;
 }

@@ -1,3 +1,35 @@
 import UserEdit from './UserEdit';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { withRouter } from 'react-router';
+import {
+  createUser,
+  getUser,
+  updateUser
+} from '../../../redux/modules/user';
+import * as selectors from '../../../redux/selectors';
 
-export default UserEdit;
+UserEdit.propTypes = {
+  createUser: PropTypes.func,
+  getUser: PropTypes.func,
+  history: PropTypes.object,
+  updateUser: PropTypes.func,
+  userState: PropTypes.object,
+};
+
+const selector = createStructuredSelector({
+  userState: selectors.userStateSelector
+});
+
+const actions = {
+  createUser,
+  getUser,
+  updateUser
+};
+
+export default compose(
+  connect(selector, actions),
+  withRouter
+)(UserEdit);

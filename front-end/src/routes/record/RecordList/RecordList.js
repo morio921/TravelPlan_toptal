@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -11,17 +10,15 @@ import {
   Label,
   UncontrolledTooltip 
 } from 'reactstrap';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { FaRegCalendarPlus, FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import {
+  FaRegCalendarPlus,
+  FaRegEdit,
+  FaRegTrashAlt
+} from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { pick } from 'lodash';
-import { withRouter } from 'react-router';
-import { getRecords, deleteRecord } from '../../../redux/modules/record';
-import { recordsListSelector, recordsParamsSelector, profileSelector } from '../../../redux/selectors';
 import { getDateStr } from '../../../helpers';
 import { isAdmin } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
@@ -40,16 +37,6 @@ const RecordFilterSchema = Yup.object().shape({
 });
 
 class RecordList extends Component {
-  static propTypes = {
-    deleteRecord: PropTypes.func,
-    getRecords: PropTypes.func,
-    handleSubmit: PropTypes.func,
-    history: PropTypes.object,
-    pagination: PropTypes.object,
-    recordsList: PropTypes.array,
-    profile: PropTypes.object,
-  };
-
   componentDidMount() {
     const { getRecords, params } = this.props;
     getRecords({ params });
@@ -57,7 +44,7 @@ class RecordList extends Component {
 
   handleDeleteRecord = (id) => () => {
     const { deleteRecord, getRecords, params } = this.props;
-    confirm('Are you sure to delete the record?').then(
+    confirm('Are you sure to delete this record?').then(
       () => {
         deleteRecord({
           id,
@@ -176,7 +163,7 @@ class RecordList extends Component {
             </tr>
           </thead>
           <tbody>
-            {recordsList ? (recordsList.map((record, index) => (
+            {recordsList.map((record, index) => (
               <tr key={index}>
                 <th className='text-center' scope='row'>{index + 1}</th>
                 {isAdmin(profile) && <td className='text-center'>{record.userName}</td>}
@@ -201,7 +188,7 @@ class RecordList extends Component {
                   </UncontrolledTooltip>
                 </td>
               </tr>
-            ))) : <div>{'No Output Data'}</div>}
+            ))}
           </tbody>
         </Table>
         <Pagination pagination={pagination} setPagination={this.handlePagination} />
@@ -210,18 +197,4 @@ class RecordList extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  recordsList: recordsListSelector,
-  params: recordsParamsSelector,
-  profile: profileSelector,
-})
-
-const actions = {
-  getRecords,
-  deleteRecord
-}
-
-export default compose(
-  connect(selector, actions),
-  withRouter
-)(RecordList)
+export default RecordList;

@@ -1,30 +1,20 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Button, Table } from 'reactstrap';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import {
+  Button,
+  Table
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { pick } from 'lodash';
-import { withRouter } from 'react-router';
-import { getFutureRecords, deleteRecord } from '../../redux/modules/record';
-import { recordsListSelector, recordsParamsSelector, profileSelector } from '../../redux/selectors';
+import {
+  FaRegEdit,
+  FaRegTrashAlt
+} from 'react-icons/fa';
 import { isAdmin } from '../../helpers/roleHelpers';
 import confirm from '../../components/ConfirmModal';
 import Pagination from '../../components/Pagination';
 import moment from 'moment';
 
 class Dashboard extends Component {
-  static propTypes = {
-    deleteRecord: PropTypes.func,
-    getFutureRecords: PropTypes.func,
-    history: PropTypes.object,
-    pagination: PropTypes.object,
-    recordsList: PropTypes.array,
-    profile: PropTypes.object,
-  };
-
   componentDidMount() {
     const { getFutureRecords, params } = this.props;
     getFutureRecords({ params });
@@ -32,8 +22,8 @@ class Dashboard extends Component {
 
   handleDeleteRecord = (id) => () => {
     const { deleteRecord, getFutureRecords, params } = this.props;
-    confirm('Are you sure to delete the record?').then(
-      () => {
+    confirm('Are you sure to delete the record?')
+      .then(() => {
         deleteRecord({
           id,
           success: () => getFutureRecords({ params })
@@ -106,18 +96,4 @@ class Dashboard extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  recordsList: recordsListSelector,
-  params: recordsParamsSelector,
-  profile: profileSelector,
-});
-
-const actions = {
-  getFutureRecords,
-  deleteRecord
-};
-
-export default compose(
-  connect(selector, actions),
-  withRouter
-)(Dashboard);
+export default Dashboard;

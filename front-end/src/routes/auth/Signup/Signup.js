@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -9,13 +8,8 @@ import {
   Input,
   Label
 } from 'reactstrap';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { authStateSelector } from '../../../redux/selectors';
-import { signup } from '../../../redux/modules/auth';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -40,20 +34,11 @@ const SignupSchema = Yup.object().shape({
 });
 
 class Signup extends Component {
-  static propTypes = {
-    auth: PropTypes.object,
-    handleSubmit: PropTypes.func,
-    history: PropTypes.object,
-    signup: PropTypes.func
-  };
-
   handleSignup = (values) => {
     const { history, signup } = this.props;
     signup({
       body: values,
-      success: () => {
-        history.push('/');
-      }
+      success: () => history.push('/')
     });
   }
 
@@ -61,7 +46,7 @@ class Signup extends Component {
     return (
       <Row>
         <Col sm={12} md={{ size: 6, offset: 3 }}>
-          <h2 className='text-center mb-5'>Signup</h2>
+          <h2 className='text-center mb-5'>Sign Up</h2>
           <Formik
             initialValues = {{
               firstName: '',
@@ -165,7 +150,7 @@ class Signup extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Button color='primary' type='submit'>Signup</Button>
+                <Button color='primary' type='submit'>Sign Up</Button>
               </Form>
             )}
           </Formik>
@@ -175,14 +160,4 @@ class Signup extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  auth: authStateSelector
-});
-
-const actions = {
-  signup
-};
-
-export default compose(
-  connect(selector, actions)
-)(Signup);
+export default Signup;

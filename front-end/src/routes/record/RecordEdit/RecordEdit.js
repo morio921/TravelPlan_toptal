@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -9,21 +8,10 @@ import {
   Input,
   Row
 } from 'reactstrap';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
-import {
-  createRecord,
-  getRecord,
-  updateRecord,
-} from '../../../redux/modules/record';
 import { getDateStr } from '../../../helpers';
-import { getUsers } from '../../../redux/modules/user';
-import * as selectors from '../../../redux/selectors';
 import moment from 'moment';
 
 const RecordEditSchema = Yup.object().shape({
@@ -44,21 +32,7 @@ const RecordEditSchema = Yup.object().shape({
 });
 
 class RecordEdit extends Component {
-  static propTypes = {
-    createRecord: PropTypes.func,
-    getRecord: PropTypes.func,
-    getUsers: PropTypes.func,
-    handleSubmit: PropTypes.func,
-    history: PropTypes.object,
-    profile: PropTypes.object,
-    recordState: PropTypes.object,
-    updateRecord: PropTypes.func,
-    usersList: PropTypes.array
-  };
-
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     const { getRecord, match: { params } } = this.props;
     params.id && getRecord({ id: params.id });
   }
@@ -128,6 +102,7 @@ class RecordEdit extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
+
                 <Row>
                   <Col xs={12}>
                     <FormGroup>
@@ -145,6 +120,7 @@ class RecordEdit extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
+
                 <Row>
                   <Col xs={12}>
                     <FormGroup>
@@ -162,6 +138,7 @@ class RecordEdit extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
+                
                 <Row>
                   <Col xs={12}>
                     <FormGroup>
@@ -200,20 +177,4 @@ class RecordEdit extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  profile: selectors.profileSelector,
-  recordState: selectors.recordStateSelector,
-  usersList: selectors.usersListSelector,
-});
-
-const actions = {
-  createRecord,
-  getRecord,
-  updateRecord,
-  getUsers
-};
-
-export default compose(
-  connect(selector, actions),
-  withRouter
-)(RecordEdit);
+export default RecordEdit;

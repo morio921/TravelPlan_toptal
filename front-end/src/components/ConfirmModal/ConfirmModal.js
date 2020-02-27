@@ -18,7 +18,7 @@ const ConfirmModal = ({show, proceed, dismiss, cancel, confirmation, options}) =
       <Button color="secondary" onClick={() => cancel()}>Cancel</Button>
     </ModalFooter>
   </Modal>
-)
+);
 
 ConfirmModal.propTypes = {
   show: PropTypes.bool,
@@ -27,6 +27,6 @@ ConfirmModal.propTypes = {
   dismiss: PropTypes.func,
   confirmation: PropTypes.string,
   options: PropTypes.object
-}
+};
 
-export default confirmable(ConfirmModal)
+export default confirmable(ConfirmModal);

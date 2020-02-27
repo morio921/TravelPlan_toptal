@@ -9,7 +9,7 @@ const doSignin = apiCall({
   success: (res, action) => {
     localStorage.setItem('travel_plans_auth', JSON.stringify(res.data));
   }
-})
+});
 
 const doSignup = apiCall({
   type: DO_SIGNUP,
@@ -21,13 +21,13 @@ const doSignup = apiCall({
   fail: () => {
     localStorage.removeItem('travel_plans_auth');
   }
-})
+});
 
 const doGetProfile = apiCall({
   type: GET_PROFILE,
   method: 'get',
   path: () => '/users/profile/'
-})
+});
 
 const doSaveProfile = apiCall({
   type: SAVE_PROFILE,
@@ -39,11 +39,11 @@ const doSaveProfile = apiCall({
       token: JSON.parse(localStorage.getItem('jogging_tracker_auth')).token
     }))
   }
-})
+});
 
 export default function* rootSaga () {
-  yield takeLatest(DO_SIGNIN, doSignin)
-  yield takeLatest(DO_SIGNUP, doSignup)
-  yield takeLatest(GET_PROFILE, doGetProfile)
-  yield takeLatest(SAVE_PROFILE, doSaveProfile)
+  yield takeLatest(DO_SIGNIN, doSignin);
+  yield takeLatest(DO_SIGNUP, doSignup);
+  yield takeLatest(GET_PROFILE, doGetProfile);
+  yield takeLatest(SAVE_PROFILE, doSaveProfile);
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Col,
@@ -9,16 +8,9 @@ import {
   Input,
   Label
 } from 'reactstrap';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
-import { updateUser } from '../../../redux/modules/user';
-import { signout } from '../../../redux/modules/auth';
-import * as selectors from '../../../redux/selectors';
 
 const ProfileEditSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -43,12 +35,6 @@ const ProfileEditSchema = Yup.object().shape({
 });
 
 class Profile extends Component {
-  static propTypes = {
-    history: PropTypes.object,
-    profile: PropTypes.object,
-    updateUser: PropTypes.func,
-  };
-
   handleSave = (values) => {
     const { updateUser, profile, signout } = this.props;
 
@@ -194,16 +180,4 @@ class Profile extends Component {
   }
 }
 
-const selector = createStructuredSelector({
-  profile: selectors.profileSelector,
-});
-
-const actions = {
-  updateUser,
-  signout
-};
-
-export default compose(
-  connect(selector, actions),
-  withRouter
-)(Profile);
+export default Profile;
