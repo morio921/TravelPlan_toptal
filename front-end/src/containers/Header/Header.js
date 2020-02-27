@@ -61,6 +61,9 @@ class Header extends React.Component {
                 <Link to='/dashboard' className='nav-link'>Future Plans</Link>
               </NavItem>
               <NavItem>
+                <Link to='/profile' className='nav-link'>Profile</Link>
+              </NavItem>
+              <NavItem>
                 <Link to='/' onClick={this.handleLogout} className='nav-link'>
                   <FaSignOutAlt />
                 </Link>
@@ -85,7 +88,7 @@ class Header extends React.Component {
 }
 
 const selector = (state) => ({
-  auth: state.auth
+  auth: state.auth,
 })
 
 const actions = {

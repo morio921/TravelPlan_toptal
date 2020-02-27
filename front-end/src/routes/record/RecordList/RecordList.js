@@ -8,7 +8,8 @@ import {
   Row,
   FormGroup,
   Input,
-  Label
+  Label,
+  UncontrolledTooltip 
 } from 'reactstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -171,7 +172,7 @@ class RecordList extends Component {
               <th className='text-center'>End Date</th>
               <th className='text-center'>Comment</th>
               <th className='text-center'>After Days</th>
-              <th className='text-right'>Actions</th>
+              <th className='text-center'>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -184,14 +185,20 @@ class RecordList extends Component {
                 <td className='text-center'>{moment(record.endDate).format('MM-DD-YYYY')}</td>
                 <td className='text-center'>{record.comment}</td>
                 <td className='text-center'>{this.displayDayCount(record.startDate)}</td>
-                <td className='text-right'>
-                  <Link className='btn btn-primary btn-sm' to={`/records/edit/${record._id}`}>
+                <td className='text-center'>
+                  <Link id='editButton' className='btn btn-primary btn-sm' to={`/records/edit/${record._id}`}>
                     <FaRegEdit />
                   </Link>
+                  <UncontrolledTooltip placement='bottom' target='editButton'>
+                    Edit
+                  </UncontrolledTooltip>
                   {' '}
-                  <Button color='danger' size='sm' onClick={this.handleDeleteRecord(record._id)}>
+                  <Button id='deleteButton' color='danger' size='sm' onClick={this.handleDeleteRecord(record._id)}>
                     <FaRegTrashAlt />
                   </Button>
+                  <UncontrolledTooltip placement='bottom' target='deleteButton'>
+                    Delete
+                  </UncontrolledTooltip>
                 </td>
               </tr>
             ))) : <div>{'No Output Data'}</div>}

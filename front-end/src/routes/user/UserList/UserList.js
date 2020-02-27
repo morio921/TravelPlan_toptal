@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Table } from 'reactstrap';
+import { Button, Table, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -63,7 +63,7 @@ class UsersList extends Component {
             <FaUserPlus size='1.2em' /> Add User
           </Link>
         </div>
-        <Table striped>
+        <Table striped responsive>
           <thead>
             <tr>
               <th>No</th>
@@ -82,15 +82,29 @@ class UsersList extends Component {
                 <td>{ucFirst(user.role)}</td>
                 <td className='text-right'>
                   {' '}
-                  <Button color='primary' tag={Link} size='sm' to={`/users/edit/${user._id}`}>
-                    <FaUserEdit />
-                  </Button>
-                  {' '}
-                  {profile._id !== user._id ? (<Button color='danger' size='sm' onClick={this.handleDeleteUser(user._id)}>
-                    <FaTrash />
-                  </Button>) : (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
+                  {profile._id !== user._id ? (<>
+                    <Button id='editButton' color='primary' tag={Link} size='sm' to={`/users/edit/${user._id}`}>
+                      <FaUserEdit />
+                    </Button>
+                    <UncontrolledTooltip placement='top' target='editButton'>
+                      Edit
+                    </UncontrolledTooltip>
+                  </>
+                  ) : (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
                     <FaTrash />
                   </Button>)}
+                  {' '}
+                  {profile._id !== user._id ? (<>
+                    <Button id='deleteButton' color='danger' size='sm' onClick={this.handleDeleteUser(user._id)}>
+                      <FaTrash />
+                    </Button>
+                    <UncontrolledTooltip placement='top' target='deleteButton'>
+                      Delete
+                    </UncontrolledTooltip>
+                  </>
+                  ) : (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
+                      <FaTrash />
+                    </Button>)}
                 </td>
               </tr>
             ))}

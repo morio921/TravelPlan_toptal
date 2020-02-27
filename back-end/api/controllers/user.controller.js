@@ -30,6 +30,7 @@ function create(req, res, next) {
 
 function update(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
+  const oldUserName = req.userModel.firstName + ' ' + req.userModel.lastName;
 
   Object.assign(req.userModel, {
     firstName, lastName, email
@@ -48,7 +49,12 @@ function update(req, res, next) {
       if (!updatedUserItem) {
         return new APIError('User not updated', 404);
       }
-      res.json(updatedUserItem);
+      const newUserName = updatedUserItem.firstName + ' ' + updatedUserItem.lastName;
+      Record.updateMany({ userName: oldUserName}, { userName: newUserName })
+        .then(() => {
+          res.json(updatedUserItem);
+        })
+        .catch(next);
     })
     .catch(next);
 }
@@ -106,18 +112,6 @@ function getUserByID(req, res, next, id) {
   .catch(next);
 }
 
-function getProfile(req, res, next) {
-  User.findById(req.user._id)
-  .then((userItem) => {
-    if (!userItem) {
-      return new APIError('User not founded', 404);
-    }
-    req.userModel = userItem;
-    next();
-  })
-  .catch(next);
-}
-
 module.exports = {
   create,
   update,
@@ -125,5 +119,4 @@ module.exports = {
   list,
   remove,
   getUserByID,
-  getProfile,
 };
