@@ -1,4 +1,5 @@
 const Record = require('../models/record.model');
+const User = require('../models/user.model');
 const ROLES = require('../constants/role');
 const APIError = require('../utils/api-error');
 
@@ -39,10 +40,10 @@ async function list(req, res, next) {
 
   let query = {};
   if (req.user.role === ROLES.USER) {
-    query = { user: req.user._id };
+    query['userName'] = req.user.firstName + ' ' + req.user.lastName;
+  } else {
+    query['userName'] = { $regex: userName ? userName : '', $options: 'i' };
   }
-
-  query['userName'] = { $regex: userName ? userName : '', $options: 'i' };
 
   if(fromDate && toDate)
     query['startDate'] = { $gte: fromDate, $lte: toDate };
@@ -50,6 +51,8 @@ async function list(req, res, next) {
     query['startDate'] = { $gte: fromDate };
   else if(!fromDate && toDate)
     query['startDate'] = { $lte: toDate };
+
+  console.log("record controller list", query);
 
   await Record.find(query)
     .skip((page - 1) * page_size)
@@ -67,10 +70,11 @@ async function list(req, res, next) {
 }
 
 async function remove(req, res, next) {
-  await req.record.remove(() => {
-    res.json(req.record._id);
-  })
-  .catch(next);
+  await req.record.remove()
+    .then(() => {
+      res.json(req.record._id);
+    })
+    .catch(next);
 }
 
 async function getRecordById(req, res, next, id) {
@@ -80,11 +84,12 @@ async function getRecordById(req, res, next, id) {
         return new APIError('Record not created', 404);
       }
 
-      if(recordItem.user.toString() !== req.user._id && req.user.role !== ROLES.ADMIN) {
+      const userName = req.user.firstName + ' ' + req.user.lastName;
+      if(recordItem.userName !== userName && req.user.role !== ROLES.ADMIN) {
         return new APIError('User is not authorized to access this record', 403);
       }
 
-      req.record = record;
+      req.record = recordItem;
       next();
     })
     .catch(next);

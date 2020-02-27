@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert,
   Button,
   Col,
   Form,
@@ -16,9 +15,7 @@ import { createStructuredSelector } from 'reselect';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { authStateSelector } from '../../../redux/selectors';
-import { ucFirst } from '../../../helpers';
-import { requestFail } from '../../../redux/api/request';
-import { signup, DO_SIGNUP } from '../../../redux/modules/auth';
+import { signup } from '../../../redux/modules/auth';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -60,25 +57,11 @@ class Signup extends Component {
     });
   }
 
-  get errorText () {
-    const { auth: { error } } = this.props;
-    return error
-    ? Object.keys(error.data).map((key) => (
-      <div key={key}>{ucFirst(error.data[key].toString())}</div>
-    ))
-    : '';
-  }
-
   render() {
-    const { auth } = this.props;
-
     return (
       <Row>
         <Col sm={12} md={{ size: 6, offset: 3 }}>
-          {auth.status === requestFail(DO_SIGNUP) &&
-            <Alert color='danger'>{this.errorText}</Alert>
-          }
-          <h2 className='text-center mb-5'>New User Signup</h2>
+          <h2 className='text-center mb-5'>Signup</h2>
           <Formik
             initialValues = {{
               firstName: '',
@@ -105,7 +88,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('firstName')}
                       />
                       {formik.errors.firstName && formik.touched.firstName ? (
-                        <div style={{color: 'red'}}>{formik.errors.firstName}</div>
+                        <div className='validation-color'>{formik.errors.firstName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -122,7 +105,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('lastName')}
                       />
                       {formik.errors.lastName && formik.touched.lastName ? (
-                        <div style={{color: 'red'}}>{formik.errors.lastName}</div>
+                        <div className='validation-color'>{formik.errors.lastName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -141,7 +124,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('email')}
                       />
                       {formik.errors.email && formik.touched.email ? (
-                        <div style={{color: 'red'}}>{formik.errors.email}</div>
+                        <div className='validation-color'>{formik.errors.email}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -160,7 +143,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('password')}
                       />
                       {formik.errors.password && formik.touched.password ? (
-                        <div style={{color: 'red'}}>{formik.errors.password}</div>
+                        <div className='validation-color'>{formik.errors.password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -177,7 +160,7 @@ class Signup extends Component {
                         {...formik.getFieldProps('confirm_password')}
                       />
                       {formik.errors.confirm_password && formik.touched.confirm_password ? (
-                        <div style={{color: 'red'}}>{formik.errors.confirm_password}</div>
+                        <div className='validation-color'>{formik.errors.confirm_password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -194,12 +177,12 @@ class Signup extends Component {
 
 const selector = createStructuredSelector({
   auth: authStateSelector
-})
+});
 
 const actions = {
   signup
-}
+};
 
 export default compose(
   connect(selector, actions)
-)(Signup)
+)(Signup);

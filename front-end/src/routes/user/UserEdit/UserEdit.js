@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert,
   Button,
   Col,
   Form,
@@ -17,9 +16,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import { createUser, getUser, updateUser, CREATE_USER, UPDATE_USER } from '../../../redux/modules/user';
-import { ucFirst } from '../../../helpers';
-import { requestFail, requestSuccess } from '../../../redux/api/request';
+import { createUser, getUser, updateUser } from '../../../redux/modules/user';
 import * as selectors from '../../../redux/selectors';
 
 const roleOptions = [
@@ -36,12 +33,6 @@ const roleOptions = [
     label: 'Admin',
   }
 ];
-
-const requestIsFailed = ({ status }) =>
-  status === requestFail(CREATE_USER) || status === requestFail(UPDATE_USER)
-
-const requestIsSuccess = ({ status }) =>
-  status === requestSuccess(CREATE_USER) || status === requestSuccess(UPDATE_USER)
 
 const UserAddSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -76,35 +67,24 @@ class UserEdit extends Component {
     handleSubmit: PropTypes.func,
   };
 
-  // constructor(props) {
-  //   super(props);
-
-  //   const { getUser, match: { params } } = this.props;
-  //   params.id && getUser({ id: params.id });
-  // }
+  componentDidMount() {
+    const { getUser, match: { params } } = this.props;
+    params.id && getUser({ id: params.id });
+  }
 
   handleSave = (values) => {
     const { createUser, updateUser, match: { params }, history } = this.props;
-    console.log("handleSave values", values);
-    params.id
-    ? updateUser({
-      id: params.id,
-      body: values,
-      success: () => history.push('/users')
-    })
-    : createUser({
-      body: values,
-      success: () => history.push('/users')
-    })
-  }
 
-  get errorText () {
-    const { userState: { error } } = this.props
-    return error
-    ? Object.keys(error.data).map((key) => (
-      <div key={key}>{ucFirst(error.data[key].toString())}</div>
-    ))
-    : ''
+    params.id
+      ? updateUser({
+        id: params.id,
+        body: values,
+        success: () => history.push('/users')
+      })
+      : createUser({
+        body: values,
+        success: () => history.push('/users')
+      });
   }
 
   render() {
@@ -113,12 +93,6 @@ class UserEdit extends Component {
     return (
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
-          {requestIsFailed(userState) &&
-            <Alert color='danger'>{this.errorText}</Alert>
-          }
-          {requestIsSuccess(userState) &&
-            <Alert color='success'>Updated successfully!</Alert>
-          }
           <h2 className='text-center mb-5'>
             {params.id ? 'Edit User' : 'Add User'}
           </h2>
@@ -140,6 +114,7 @@ class UserEdit extends Component {
             }}
             validationSchema={UserAddSchema}
             onSubmit={this.handleSave}
+            enableReinitialize
           >
             {formik => (
               <Form onSubmit={formik.handleSubmit}>
@@ -156,7 +131,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('firstName')}
                       />
                       {formik.errors.firstName && formik.touched.firstName ? (
-                        <div className='danger'>{formik.errors.firstName}</div>
+                        <div className='validation-color'>{formik.errors.firstName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -173,7 +148,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('lastName')}
                       />
                       {formik.errors.lastName && formik.touched.lastName ? (
-                        <div className='danger'>{formik.errors.lastName}</div>
+                        <div className='validation-color'>{formik.errors.lastName}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -192,7 +167,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('email')}
                       />
                       {formik.errors.email && formik.touched.email ? (
-                        <div className='danger'>{formik.errors.email}</div>
+                        <div className='validation-color'>{formik.errors.email}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -214,7 +189,7 @@ class UserEdit extends Component {
                         ))}
                       </Input>
                       {formik.errors.role && formik.touched.role ? (
-                        <div className='danger'>{formik.errors.role}</div>
+                        <div className='validation-color'>{formik.errors.role}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -233,7 +208,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('password')}
                       />
                       {formik.errors.password && formik.touched.password ? (
-                        <div className='danger'>{formik.errors.password}</div>
+                        <div className='validation-color'>{formik.errors.password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -252,7 +227,7 @@ class UserEdit extends Component {
                         {...formik.getFieldProps('confirm_password')}
                       />
                       {formik.errors.confirm_password && formik.touched.confirm_password ? (
-                        <div className='danger'>{formik.errors.confirm_password}</div>
+                        <div className='validation-color'>{formik.errors.confirm_password}</div>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -280,15 +255,15 @@ class UserEdit extends Component {
 const selector = createStructuredSelector({
   profile: selectors.profileSelector,
   userState: selectors.userStateSelector
-})
+});
 
 const actions = {
   createUser,
   getUser,
   updateUser
-}
+};
 
 export default compose(
   connect(selector, actions),
   withRouter
-)(UserEdit)
+)(UserEdit);

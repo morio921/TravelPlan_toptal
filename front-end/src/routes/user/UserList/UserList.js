@@ -24,9 +24,7 @@ class UsersList extends Component {
     history: PropTypes.object,
   };
 
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     const { getUsers, params } = this.props;
     getUsers({ params });
   }
@@ -38,27 +36,19 @@ class UsersList extends Component {
         deleteUser({
           id,
           success: () => getUsers({ params })
-        })
+        });
       }
     )
   }
 
-  handleEditUser = (id) => () => {
-    const { getUser, history } = this.props;
-    getUser({
-      id,
-      success: () => history.push(`/users/edit/${id}`)
-    })
-  }
-
   handlePagination = (pagination) => {
-    const { getUsers, params } = this.props
+    const { getUsers, params } = this.props;
     getUsers({
       params: {
         ...pick(params, ['page', 'page_size']),
         ...pagination
       }
-    })
+    });
   }
 
   render() {
@@ -92,7 +82,7 @@ class UsersList extends Component {
                 <td>{ucFirst(user.role)}</td>
                 <td className='text-right'>
                   {' '}
-                  <Button color='primary' size='sm' onClick={this.handleEditUser(user._id)}>
+                  <Button color='primary' tag={Link} size='sm' to={`/users/edit/${user._id}`}>
                     <FaUserEdit />
                   </Button>
                   {' '}
@@ -116,15 +106,15 @@ const selector = createStructuredSelector({
   usersList: usersListSelector,
   params: usersParamsSelector,
   profile: profileSelector
-})
+});
 
 const actions = {
   getUsers,
   getUser,
   deleteUser
-}
+};
 
 export default compose(
   connect(selector, actions),
   withRouter
-)(UsersList)
+)(UsersList);

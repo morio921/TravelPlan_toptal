@@ -20,12 +20,12 @@ import { Link } from 'react-router-dom';
 import { pick } from 'lodash';
 import { withRouter } from 'react-router';
 import { getRecords, deleteRecord } from '../../../redux/modules/record';
-import { recordsListSelector, recordsParamsSelector } from '../../../redux/selectors';
+import { recordsListSelector, recordsParamsSelector, profileSelector } from '../../../redux/selectors';
 import { getDateStr } from '../../../helpers';
+import { canManageUsers } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
 import moment from 'moment';
-import './RecordList.css';
 
 const RecordFilterSchema = Yup.object().shape({
   userName: Yup.string(),
@@ -46,6 +46,7 @@ class RecordList extends Component {
     history: PropTypes.object,
     pagination: PropTypes.object,
     recordsList: PropTypes.array,
+    profile: PropTypes.object,
   };
 
   constructor(props) {
@@ -97,7 +98,7 @@ class RecordList extends Component {
   }
 
   render() {
-    const { params, recordsList } = this.props;
+    const { params, recordsList, profile } = this.props;
     const pagination = pick(params, ['page', 'page_size', 'count']);
 
     return (
@@ -116,7 +117,7 @@ class RecordList extends Component {
             >
               {formik => (
                 <Form inline onSubmit={formik.handleSubmit}>
-                  <FormGroup className='form-group-style'>
+                  {canManageUsers(profile) && (<FormGroup className='form-group-style'>
                     <Label for='userName'>Name:</Label>
                     <Input
                       id='userName'
@@ -125,7 +126,7 @@ class RecordList extends Component {
                       value={formik.values.userName}
                       {...formik.getFieldProps('userName')}
                     />
-                  </FormGroup>
+                  </FormGroup>)}
                   <FormGroup className='form-group-style'>
                     <Label for="fromDate">From Date:</Label>
                     <Input
@@ -206,7 +207,8 @@ class RecordList extends Component {
 
 const selector = createStructuredSelector({
   recordsList: recordsListSelector,
-  params: recordsParamsSelector
+  params: recordsParamsSelector,
+  profile: profileSelector,
 })
 
 const actions = {

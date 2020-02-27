@@ -18,7 +18,6 @@ import * as Yup from 'yup';
 import { authStateSelector } from '../../../redux/selectors';
 import { signin, DO_SIGNIN } from '../../../redux/modules/auth';
 import { requestFail } from '../../../redux/api/request';
-import './Signin.css';
 
 const SigninSchema = Yup.object().shape({
   email: Yup.string()
@@ -71,7 +70,7 @@ class Signin extends Component {
                     {...formik.getFieldProps('email')}
                   />
                   {formik.errors.email && formik.touched.email ? (
-                    <div className='error-message danger'>{formik.errors.email}</div>
+                    <div className='validation-color'>{formik.errors.email}</div>
                   ) : null}
                 </FormGroup>
 
@@ -86,7 +85,7 @@ class Signin extends Component {
                     {...formik.getFieldProps('password')}
                   />
                   {formik.errors.password && formik.touched.password ? (
-                    <div className='error-message danger'>{formik.errors.password}</div>
+                    <div className='validation-color'>{formik.errors.password}</div>
                   ) : null}
                 </FormGroup>
                 <Button color='primary' type='submit'>Signin</Button>
