@@ -7,10 +7,10 @@ import { omit, reject } from 'lodash';
 // ------------------------------------
 export const GET_RECORD = 'GET_RECORD';
 export const GET_RECORDS = 'GET_RECORDS';
+export const GET_FUTURE_RECORDS = 'GET_FUTURE_RECORDS';
 export const CREATE_RECORD = 'CREATE_RECORD';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
 export const DELETE_RECORD = 'DELETE_RECORD';
-export const SET_RECORDS_PAGINATION = 'SET_RECORDS_PAGINATION';
 
 // ------------------------------------
 // Actions
@@ -18,6 +18,7 @@ export const SET_RECORDS_PAGINATION = 'SET_RECORDS_PAGINATION';
 
 export const getRecord = createAction(GET_RECORD);
 export const getRecords = createAction(GET_RECORDS);
+export const getFutureRecords = createAction(GET_FUTURE_RECORDS);
 export const createRecord = createAction(CREATE_RECORD);
 export const updateRecord = createAction(UPDATE_RECORD);
 export const deleteRecord = createAction(DELETE_RECORD);
@@ -67,6 +68,24 @@ export default handleActions({
   [requestFail(GET_RECORDS)]: (state, { payload }) => ({
     ...state,
     status: requestFail(GET_RECORDS),
+    error: payload
+  }),
+
+  [requestSuccess(GET_FUTURE_RECORDS)]: (state, { payload }) => ({
+    ...state,
+    status: requestSuccess(GET_FUTURE_RECORDS),
+    records: payload.results,
+    params: {
+      count: payload.count,
+      ...state.params,
+      ...omit(payload, 'results')
+    },
+    error: null
+  }),
+
+  [requestFail(GET_FUTURE_RECORDS)]: (state, { payload }) => ({
+    ...state,
+    status: requestFail(GET_FUTURE_RECORDS),
     error: payload
   }),
 

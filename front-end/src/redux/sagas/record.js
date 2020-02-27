@@ -3,6 +3,7 @@ import { get, pick } from 'lodash';
 import {
   GET_RECORD,
   GET_RECORDS,
+  GET_FUTURE_RECORDS,
   CREATE_RECORD,
   UPDATE_RECORD,
   DELETE_RECORD
@@ -22,6 +23,16 @@ const doGetRecords = apiCall({
   payloadOnSuccess: (res, { payload }) => ({
     ...res,
     ...pick(get(payload, 'params', {}), ['userName', 'fromDate', 'toDate', 'page', 'page_size']),
+  })
+})
+
+const doGetFutureRecords = apiCall({
+  type: GET_FUTURE_RECORDS,
+  method: 'get',
+  path: () => `/record/future/`,
+  payloadOnSuccess: (res, { payload }) => ({
+    ...res,
+    ...pick(get(payload, 'params', {}), ['page', 'page_size']),
   })
 })
 
@@ -47,6 +58,7 @@ const doDeleteRecord = apiCall({
 export default function* rootSaga () {
   yield takeLatest(GET_RECORD, doGetRecord)
   yield takeLatest(GET_RECORDS, doGetRecords)
+  yield takeLatest(GET_FUTURE_RECORDS, doGetFutureRecords)
   yield takeLatest(CREATE_RECORD, doCreateRecord)
   yield takeLatest(UPDATE_RECORD, doUpdateRecord)
   yield takeLatest(DELETE_RECORD, doDeleteRecord)

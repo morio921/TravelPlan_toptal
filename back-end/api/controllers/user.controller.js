@@ -1,8 +1,9 @@
 const User = require('../models/user.model');
+const Record = require('../models/record.model');
 const ROLES = require('../constants/role');
 const APIError = require('../utils/api-error');
 
-async function create(req, res, next) {
+function create(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
   if (!firstName || !lastName || !email  || !password || !role) {
@@ -17,7 +18,7 @@ async function create(req, res, next) {
     user.role = role;
   }
 
-  await user.save()
+  user.save()
     .then((newUserItem) => {
       if (!newUserItem) {
         return new APIError('User not created', 404);
@@ -27,7 +28,7 @@ async function create(req, res, next) {
     .catch(next);
 }
 
-async function update(req, res, next) {
+function update(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
   Object.assign(req.userModel, {
@@ -42,10 +43,10 @@ async function update(req, res, next) {
     req.userModel.role = role;
   }
 
-  await req.userModel.save()
+  req.userModel.save()
     .then((updatedUserItem) => {
       if (!updatedUserItem) {
-        return new APIError('User not created', 404);
+        return new APIError('User not updated', 404);
       }
       res.json(updatedUserItem);
     })
@@ -56,7 +57,7 @@ function read(req, res) {
   res.json(req.userModel);
 }
 
-async function list(req, res, next) {
+function list(req, res, next) {
   const page_size = parseInt(req.query.page_size);
   const page = parseInt(req.query.page);
 
@@ -65,12 +66,12 @@ async function list(req, res, next) {
     query = { role: { $ne: ROLES.ADMIN } };   //For getting users except admin users
   }
 
-  await User.find(query)
+  User.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
     .then((userList) => {
       if (!userList) {
-        return new APIError('User not created', 404);
+        return new APIError('Users not founded', 404);
       }
       User.find(query)
       .then((newList) => {
@@ -80,19 +81,24 @@ async function list(req, res, next) {
     .catch(next);
 }
 
-async function remove(req, res, next) {
-  await req.userModel.remove()
+function remove(req, res, next) {
+  req.userModel.remove()
     .then(() => {
-      res.json(req.userModel._id);
+      const userFullName = req.userModel.firstName + ' ' + req.userModel.lastName;
+      Record.remove({ userName: userFullName })
+      .then(() => {
+        res.json(req.userModel._id);
+      })
+      .catch(next);
     })
     .catch(next);
 }
 
-async function getUserByID(req, res, next, id) {
-  await User.findById(id)
+function getUserByID(req, res, next, id) {
+  User.findById(id)
   .then((userItem) => {
     if (!userItem) {
-      return new APIError('User not created', 404);
+      return new APIError('User not founded', 404);
     }
     req.userModel = userItem;
     next();
@@ -100,11 +106,11 @@ async function getUserByID(req, res, next, id) {
   .catch(next);
 }
 
-async function getProfile(req, res, next) {
-  await User.findById(req.user._id)
+function getProfile(req, res, next) {
+  User.findById(req.user._id)
   .then((userItem) => {
     if (!userItem) {
-      return new APIError('User not created', 404);
+      return new APIError('User not founded', 404);
     }
     req.userModel = userItem;
     next();

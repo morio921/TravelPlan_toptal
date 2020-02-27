@@ -22,7 +22,7 @@ import { withRouter } from 'react-router';
 import { getRecords, deleteRecord } from '../../../redux/modules/record';
 import { recordsListSelector, recordsParamsSelector, profileSelector } from '../../../redux/selectors';
 import { getDateStr } from '../../../helpers';
-import { canManageUsers } from '../../../helpers/roleHelpers';
+import { isAdmin } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
 import moment from 'moment';
@@ -49,9 +49,7 @@ class RecordList extends Component {
     profile: PropTypes.object,
   };
 
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     const { getRecords, params } = this.props;
     getRecords({ params });
   }
@@ -103,7 +101,7 @@ class RecordList extends Component {
 
     return (
       <div>
-        <h2 className='text-center mb-5'>Manage Travel Records</h2>
+        <h2 className='text-center mb-5'>All Travel Records</h2>
         <Row className='text-right mb-3'>
           <Col md={10} xs={12}>
             <Formik
@@ -117,7 +115,7 @@ class RecordList extends Component {
             >
               {formik => (
                 <Form inline onSubmit={formik.handleSubmit}>
-                  {canManageUsers(profile) && (<FormGroup className='form-group-style'>
+                  {isAdmin(profile) && (<FormGroup className='form-group-style'>
                     <Label for='userName'>Name:</Label>
                     <Input
                       id='userName'
@@ -167,7 +165,7 @@ class RecordList extends Component {
           <thead>
             <tr>
               <th className='text-center'>No</th>
-              <th className='text-center'>User</th>
+              {isAdmin(profile) && <th className='text-center'>User</th>}
               <th className='text-center'>Destination</th>
               <th className='text-center'>Start Date</th>
               <th className='text-center'>End Date</th>
@@ -177,10 +175,10 @@ class RecordList extends Component {
             </tr>
           </thead>
           <tbody>
-            {recordsList && recordsList.map((record, index) => (
+            {recordsList ? (recordsList.map((record, index) => (
               <tr key={index}>
                 <th className='text-center' scope='row'>{index + 1}</th>
-                <td className='text-center'>{record.userName}</td>
+                {isAdmin(profile) && <td className='text-center'>{record.userName}</td>}
                 <td className='text-center'>{record.destination}</td>
                 <td className='text-center'>{moment(record.startDate).format('MM-DD-YYYY')}</td>
                 <td className='text-center'>{moment(record.endDate).format('MM-DD-YYYY')}</td>
@@ -196,7 +194,7 @@ class RecordList extends Component {
                   </Button>
                 </td>
               </tr>
-            ))}
+            ))) : <div>{'No Output Data'}</div>}
           </tbody>
         </Table>
         <Pagination pagination={pagination} setPagination={this.handlePagination} />
