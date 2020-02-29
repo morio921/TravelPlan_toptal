@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { authStateSelector } from '../../../redux/selectors';
+import { authStatusSelector } from '../../../redux/selectors';
 import { signin } from '../../../redux/modules/auth';
 
 Signin.propTypes = {
@@ -13,7 +13,7 @@ Signin.propTypes = {
 };
 
 const selector = createStructuredSelector({
-  auth: authStateSelector
+  auth: authStatusSelector
 });
 
 const actions = {

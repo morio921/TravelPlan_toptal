@@ -3,6 +3,9 @@ import { get } from 'lodash';
 export const authStateSelector = (state) =>
   get(state, 'auth')
 
+export const authStatusSelector = (state) =>
+  get(state, 'auth.status')
+
 export const userDetailSelector = (state) =>
   get(state, 'user.user', {})
 

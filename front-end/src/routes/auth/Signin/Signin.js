@@ -40,7 +40,7 @@ class Signin extends Component {
     return (
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
-          {auth.status === requestFail(DO_SIGNIN) &&
+          {auth === requestFail(DO_SIGNIN) &&
             <Alert color="danger">Invalid email or password!</Alert>
           }
           <Card className='card-header-style'>
