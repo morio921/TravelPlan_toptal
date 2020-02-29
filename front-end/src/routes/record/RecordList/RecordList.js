@@ -56,7 +56,7 @@ class RecordList extends Component {
   
   handleFilter = (values) => {
     const { getRecords, params } = this.props;
-    console.log("handleFilter", values);
+
     getRecords({
       params: {
         userName: values.userName,
