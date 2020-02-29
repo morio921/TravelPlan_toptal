@@ -7,7 +7,10 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from 'reactstrap';
 import { canManageUsers } from '../../helpers/roleHelpers';
 
@@ -44,8 +47,8 @@ class Header extends React.Component {
     return (
       <div>
         <Navbar color='info' light expand='md'>
-          <NavbarBrand href='/'>
-            <strong>Travel Plans</strong>
+          <NavbarBrand href='/records'>
+            <h3>Travel Plans</h3>
           </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -66,24 +69,21 @@ class Header extends React.Component {
                   <strong>Future Plans</strong>
                 </Link>
               </NavItem>
-              <NavItem>
-                <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
-                  <DropdownToggle caret color='info'>
-                    {auth.me.firstName} {auth.me.lastName}
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>
-                      <Link to='/profile' className='nav-link'>Profile</Link>
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem>
-                      <Link to='/' onClick={this.handleLogout} className='nav-link'>
-                        Sign out
-                      </Link>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </NavItem>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  <strong>{auth.me.firstName} {auth.me.lastName}</strong>
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem>
+                    <Link to='/profile' className='nav-link'>Profile</Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link to='/' onClick={this.handleLogout} className='nav-link'>
+                      Sign out
+                    </Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             </Nav>
             : <Nav className="ml-auto" navbar>
               <NavItem>

@@ -27,8 +27,11 @@ const SigninSchema = Yup.object().shape({
 
 class Signin extends Component {
   handleSignin = (values) => {
-    const { signin } = this.props;
-    signin({ body: values });
+    const { signin, history } = this.props;
+    signin({
+      body: values,
+      success: history.push('/records')
+    });
   }
 
   render() {
@@ -40,7 +43,7 @@ class Signin extends Component {
           {auth.status === requestFail(DO_SIGNIN) &&
             <Alert color="danger">Invalid email or password!</Alert>
           }
-          <Card className='card-style'>
+          <Card className='card-header-style'>
             <CardHeader>
               <h2 className='text-center'>Log In</h2>
             </CardHeader>
@@ -84,7 +87,9 @@ class Signin extends Component {
                         <div className='validation-color'>{formik.errors.password}</div>
                       ) : null}
                     </FormGroup>
-                    <Button color='primary' type='submit'>Log In</Button>
+                    <div className='text-center'>
+                      <Button color='primary' type='submit'>Log In</Button>
+                    </div>
                   </Form>
                 )}
               </Formik>

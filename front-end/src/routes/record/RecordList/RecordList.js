@@ -176,14 +176,14 @@ class RecordList extends Component {
                   <Link id='editButton' className='btn btn-primary btn-sm' to={`/records/edit/${record._id}`}>
                     <FaRegEdit />
                   </Link>
-                  <UncontrolledTooltip placement='bottom' target='editButton'>
+                  <UncontrolledTooltip placement='top' target='editButton'>
                     Edit
                   </UncontrolledTooltip>
                   {' '}
                   <Button id='deleteButton' color='danger' size='sm' onClick={this.handleDeleteRecord(record._id)}>
                     <FaRegTrashAlt />
                   </Button>
-                  <UncontrolledTooltip placement='bottom' target='deleteButton'>
+                  <UncontrolledTooltip placement='top' target='deleteButton'>
                     Delete
                   </UncontrolledTooltip>
                 </td>

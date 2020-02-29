@@ -6,7 +6,10 @@ import {
   FormGroup,
   Label,
   Input,
-  Row
+  Row,
+  Card,
+  CardBody,
+  CardHeader,
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -63,114 +66,120 @@ class RecordEdit extends Component {
     return (
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
-          <h2 className='text-center mb-5'>
-            {params.id ? 'Edit Travel Record' : 'Add New Travel Record'}
-          </h2>
-          <Formik
-            initialValues = {(params.id && recordState.record) ? {
-              destination: recordState.record.destination,
-              startDate: moment(recordState.record.startDate).format('YYYY-MM-DD'),
-              endDate: moment(recordState.record.endDate).format('YYYY-MM-DD'),
-              comment: recordState.record.comment
-            } : {
-              destination: '',
-              startDate: '',
-              endDate: '',
-              comment: ''
-            }}
-            validationSchema={RecordEditSchema}
-            onSubmit={this.handleSave}
-            enableReinitialize
-          >
-            {formik => (
-              <Form onSubmit={formik.handleSubmit}>
-                <Row>
-                  <Col xs={12}>
-                    <FormGroup>
-                      <Label for='destination'>Destination</Label><br />
-                      <Input
-                        id='destination'
-                        name='destination'
-                        type='text'
-                        placeholder='Enter destination'
-                        value={formik.values.destination}
-                        {...formik.getFieldProps('destination')}
-                      />
-                      {formik.errors.destination && formik.touched.destination ? (
-                        <div className='validation-color'>{formik.errors.destination}</div>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                </Row>
+          <Card className='card-header-style'>
+            <CardHeader>
+              <h2 className='text-center'>
+                {params.id ? 'Edit Plan' : 'Add Plan'}
+              </h2>
+            </CardHeader>
+            <CardBody>
+              <Formik
+                initialValues = {(params.id && recordState.record) ? {
+                  destination: recordState.record.destination,
+                  startDate: moment(recordState.record.startDate).format('YYYY-MM-DD'),
+                  endDate: moment(recordState.record.endDate).format('YYYY-MM-DD'),
+                  comment: recordState.record.comment
+                } : {
+                  destination: '',
+                  startDate: '',
+                  endDate: '',
+                  comment: ''
+                }}
+                validationSchema={RecordEditSchema}
+                onSubmit={this.handleSave}
+                enableReinitialize
+              >
+                {formik => (
+                  <Form onSubmit={formik.handleSubmit}>
+                    <Row>
+                      <Col xs={12}>
+                        <FormGroup>
+                          <Label for='destination'>Destination</Label><br />
+                          <Input
+                            id='destination'
+                            name='destination'
+                            type='text'
+                            placeholder='Enter destination'
+                            value={formik.values.destination}
+                            {...formik.getFieldProps('destination')}
+                          />
+                          {formik.errors.destination && formik.touched.destination ? (
+                            <div className='validation-color'>{formik.errors.destination}</div>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                    </Row>
 
-                <Row>
-                  <Col xs={12}>
-                    <FormGroup>
-                      <Label for="startDate">Start Date</Label>
-                      <Input
-                        id='startDate'
-                        type='date'
-                        name='startDate'
-                        value={formik.values.startDate}
-                        {...formik.getFieldProps('startDate')}
-                      />
-                      {formik.errors.startDate && formik.touched.startDate ? (
-                        <div className='validation-color'>{formik.errors.startDate}</div>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                </Row>
+                    <Row>
+                      <Col xs={12}>
+                        <FormGroup>
+                          <Label for="startDate">Start Date</Label>
+                          <Input
+                            id='startDate'
+                            type='date'
+                            name='startDate'
+                            value={formik.values.startDate}
+                            {...formik.getFieldProps('startDate')}
+                          />
+                          {formik.errors.startDate && formik.touched.startDate ? (
+                            <div className='validation-color'>{formik.errors.startDate}</div>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                    </Row>
 
-                <Row>
-                  <Col xs={12}>
-                    <FormGroup>
-                      <Label for="toDate">End Date</Label>
-                      <Input
-                        id='endDate'
-                        type='date'
-                        name='endDate'
-                        value={formik.values.endDate}
-                        {...formik.getFieldProps('endDate')}
-                      />
-                      {formik.errors.endDate && formik.touched.endDate ? (
-                        <div className='validation-color'>{formik.errors.endDate}</div>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                </Row>
-                
-                <Row>
-                  <Col xs={12}>
-                    <FormGroup>
-                      <Label for='comment'>Comment</Label><br />
-                      <Input
-                        id='comment'
-                        name='comment'
-                        type='text'
-                        placeholder='Enter comment'
-                        value={formik.values.comment}
-                        {...formik.getFieldProps('comment')}
-                      />
-                      {formik.errors.comment && formik.touched.comment ? (
-                        <div className='validation-color'>{formik.errors.comment}</div>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                </Row>
+                    <Row>
+                      <Col xs={12}>
+                        <FormGroup>
+                          <Label for="toDate">End Date</Label>
+                          <Input
+                            id='endDate'
+                            type='date'
+                            name='endDate'
+                            value={formik.values.endDate}
+                            {...formik.getFieldProps('endDate')}
+                          />
+                          {formik.errors.endDate && formik.touched.endDate ? (
+                            <div className='validation-color'>{formik.errors.endDate}</div>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    
+                    <Row>
+                      <Col xs={12}>
+                        <FormGroup>
+                          <Label for='comment'>Comment</Label><br />
+                          <Input
+                            id='comment'
+                            name='comment'
+                            type='text'
+                            placeholder='Enter comment'
+                            value={formik.values.comment}
+                            {...formik.getFieldProps('comment')}
+                          />
+                          {formik.errors.comment && formik.touched.comment ? (
+                            <div className='validation-color'>{formik.errors.comment}</div>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                    </Row>
 
-                <Row>
-                  <Col xs={6}>
-                    <Link to='/records' className='btn btn-secondary'>
-                      Cancel
-                    </Link>
-                  </Col>
-                  <Col className='text-right'>
-                    <Button color='primary' type='submit'>Save</Button>
-                  </Col>
-                </Row>
-              </Form>
-            )}
-          </Formik>
+                    <Row>
+                      <Col xs={6}>
+                        <Link to='/records' className='btn btn-secondary'>
+                          Cancel
+                        </Link>
+                      </Col>
+                      <Col className='text-right'>
+                        <Button color='primary' type='submit'>Save</Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                )}
+              </Formik>
+            </CardBody>
+          </Card>
         </Col>
       </Row>
     )

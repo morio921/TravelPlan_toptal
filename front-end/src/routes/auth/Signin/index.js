@@ -8,7 +8,8 @@ import { signin } from '../../../redux/modules/auth';
 
 Signin.propTypes = {
   auth: PropTypes.object,
-  signin: PropTypes.func
+  signin: PropTypes.func,
+  history: PropTypes.object
 };
 
 const selector = createStructuredSelector({

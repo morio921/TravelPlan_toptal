@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   Button,
-  Table
+  Table,
+  UncontrolledTooltip
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { pick } from 'lodash';
@@ -78,13 +79,19 @@ class Dashboard extends Component {
                 <td className='text-center'>{record.comment}</td>
                 <td className='text-center'>{this.displayDayCount(record.startDate)}</td>
                 <td className='text-right'>
-                  <Link className='btn btn-primary btn-sm' to={`/records/edit/${record._id}`}>
+                  <Link id='editButton' className='btn btn-primary btn-sm' to={`/records/edit/${record._id}`}>
                     <FaRegEdit />
                   </Link>
+                  <UncontrolledTooltip placement='top' target='editButton'>
+                    Edit
+                  </UncontrolledTooltip>
                   {' '}
-                  <Button color='danger' size='sm' onClick={this.handleDeleteRecord(record._id)}>
+                  <Button id='deleteButton' color='danger' size='sm' onClick={this.handleDeleteRecord(record._id)}>
                     <FaRegTrashAlt />
                   </Button>
+                  <UncontrolledTooltip placement='top' target='deleteButton'>
+                    Delete
+                  </UncontrolledTooltip>
                 </td>
               </tr>
             ))}

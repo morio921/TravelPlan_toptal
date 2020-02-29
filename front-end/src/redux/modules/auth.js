@@ -7,8 +7,6 @@ import { requestSuccess, requestFail } from '../api/request';
 export const DO_SIGNIN = 'DO_SIGNIN';
 export const DO_SIGNUP = 'DO_SIGNUP';
 export const DO_SIGNOUT = 'DO_SIGNOUT';
-export const GET_PROFILE = 'GET_PROFILE';
-export const SAVE_PROFILE = 'SAVE_PROFILE';
 
 // ------------------------------------
 // Actions
@@ -19,8 +17,6 @@ export const signup = createAction(DO_SIGNUP);
 export const signout = createAction(DO_SIGNOUT, () => {
   localStorage.removeItem('travel_plans_auth');
 });
-export const getProfile = createAction(GET_PROFILE);
-export const saveProfile = createAction(SAVE_PROFILE);
 
 const getInitialState = () => {
   let authRestore = JSON.parse(localStorage.getItem('travel_plans_auth') || null)
@@ -77,12 +73,4 @@ export default handleActions({
     me: null,
     error: payload
   }),
-
-  [requestSuccess(SAVE_PROFILE)]: (state, { payload }) => ({
-    ...state,
-    status: requestSuccess(SAVE_PROFILE),
-    me: payload,
-    error: null
-  })
-  
 }, getInitialState())

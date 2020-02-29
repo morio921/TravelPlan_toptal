@@ -23,7 +23,7 @@ const routes = ({ isAuthenticated }) => (
       <Container className='main-content'>
         <Route exact path='/' render={() => (
           isAuthenticated ? (
-            <Redirect to="/dashboard"/>
+            <Redirect to="/records"/>
           ) : (
             <Redirect to="/signin"/>
           )
