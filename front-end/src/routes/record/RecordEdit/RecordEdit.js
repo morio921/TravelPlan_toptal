@@ -81,8 +81,8 @@ class RecordEdit extends Component {
               <Formik
                 initialValues = {(params.id && recordState.record) ? {
                   destination: recordState.record.destination,
-                  startDate: moment(recordState.record.startDate).format('YYYY-MM-DD'),
-                  endDate: moment(recordState.record.endDate).format('YYYY-MM-DD'),
+                  startDate: moment(recordState.record.startDate),
+                  endDate: moment(recordState.record.endDate),
                   comment: recordState.record.comment
                 } : {
                   destination: '',

@@ -9,25 +9,23 @@ import {
   Label,
   Card,
   CardBody,
-  CardHeader
+  CardHeader,
+  Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { requestSuccess } from '../../../redux/api/request';
+import { DO_SIGNUP } from '../../../redux/modules/auth';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
-    .min(2, 'First name is too short')
-    .max(50, 'First name is too long')
     .required('This field is required'),
   lastName: Yup.string()
-    .min(2, 'Last name is too short')
-    .max(50, 'Last name is too long')
     .required('This field is required'),
   email: Yup.string()
     .email('Invalid email')
     .required('This field is required'),
   password: Yup.string()
-    .min(5, 'Password is too short')
     .required('This field is required'),
   confirm_password: Yup.string()
     .test('passwords-match', 'Passwords must match', function(value) {
@@ -38,17 +36,21 @@ const SignupSchema = Yup.object().shape({
 
 class Signup extends Component {
   handleSignup = (values) => {
-    const { history, signup } = this.props;
+    const { signup } = this.props;
     signup({
       body: values,
-      success: () => history.push('/')
     });
   }
 
   render() {
+    const { auth } = this.props;
+
     return (
       <Row>
         <Col sm={12} md={{ size: 6, offset: 3 }}>
+          {auth.status === requestSuccess(DO_SIGNUP) &&
+            <Alert className='alert-style' color='info'>User is created successfully!</Alert>
+          }
           <Card className='card-header-style'>
             <CardHeader>
               <h2 className='text-center'>Sign Up</h2>

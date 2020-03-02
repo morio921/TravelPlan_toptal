@@ -19,11 +19,11 @@ import {
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { pick } from 'lodash';
+import moment from 'moment';
 import { getDateStr } from '../../../helpers';
 import { isAdmin } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
-import moment from 'moment';
 
 const RecordFilterSchema = Yup.object().shape({
   userName: Yup.string(),

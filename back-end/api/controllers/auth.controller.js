@@ -17,7 +17,7 @@ function signIn(req, res, next) {
     .then((userItem) => {
       console.log("auth controller useritem", userItem);
       if (!userItem) {
-        throw new APIError('Your account is not verified', 401);
+        throw new APIError('Email address is not correct', 401);
       }
 
       return userItem.authenticate(password)
@@ -33,7 +33,7 @@ function signIn(req, res, next) {
           });
         })
         .catch(() => {
-          throw new APIError('Your account is not verified', 401);
+          throw new APIError('Password is not correct', 401);
         });
     })
     .catch(next);
@@ -90,7 +90,7 @@ async function updateProfile(req, res, next) {
       info: { _id, firstName, lastName, email, role }, token,
     });
   } catch(err) {
-    console.log(err);
+    return err;
   }
 }
 

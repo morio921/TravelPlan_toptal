@@ -41,7 +41,7 @@ class Signin extends Component {
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
           {auth.status === requestFail(DO_SIGNIN) &&
-            <Alert className='alert-style' color="danger">Invalid email or password!</Alert>
+            <Alert className='alert-style' color='danger'>{auth.error.data.message}</Alert>
           }
           <Card className='card-header-style'>
             <CardHeader>
