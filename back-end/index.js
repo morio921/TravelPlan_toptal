@@ -1,6 +1,4 @@
-const createError = require('http-errors');
 const express = require('express');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
@@ -8,6 +6,7 @@ const cors = require('cors');
 const APIError = require('./api/utils/api-error');
 const initializeDB = require('./api/mongoose');
 const apiRouter = require('./api/routes');
+
 const app = express();
 
 // initialize db on the top to have models available below
@@ -29,12 +28,15 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({
+    message: err.message,
+    stack: req.app.get('env') === 'development' ? err : {}
+  });
+  // res.render('error');
 });
 
 module.exports = app;

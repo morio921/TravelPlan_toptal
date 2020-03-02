@@ -9,4 +9,9 @@ router.route('/signin')
 router.route('/signup')
   .post(authController.signUp);
 
+router.route('/profile/:userId')
+  .put(authController.updateProfile);
+
+router.param('userId', authController.getUserByID);
+
 module.exports = router;

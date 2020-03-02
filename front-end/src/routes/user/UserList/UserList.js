@@ -12,6 +12,7 @@ import {
   FaTrash
 } from 'react-icons/fa';
 import { ucFirst } from '../../../helpers';
+import { isAdmin } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
 
@@ -49,7 +50,7 @@ class UserList extends Component {
 
     return (
       <div>
-        <h2 className='text-center mb-5'>Manage Users</h2>
+        <h2 className='text-center mb-5'>User List</h2>
         <div className='text-right mb-2'>
           <Link to='/users/new' className='btn btn-primary'>
             <FaUserPlus size='1.2em' /> Add User
@@ -74,7 +75,10 @@ class UserList extends Component {
                 <td>{ucFirst(user.role)}</td>
                 <td className='text-right'>
                   {' '}
-                  {profile._id !== user._id ? (<>
+                  {(isAdmin(user) || profile._id === user._id) ? (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
+                    <FaUserEdit />
+                  </Button>)
+                  : (<>
                     <Button id='editButton' color='primary' tag={Link} size='sm' to={`/users/edit/${user._id}`}>
                       <FaUserEdit />
                     </Button>
@@ -82,11 +86,12 @@ class UserList extends Component {
                       Edit
                     </UncontrolledTooltip>
                   </>
-                  ) : (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
-                    <FaTrash />
-                  </Button>)}
+                  )}
                   {' '}
-                  {profile._id !== user._id ? (<>
+                  {(isAdmin(user) || profile._id === user._id) ? (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
+                      <FaTrash />
+                    </Button>)
+                  : (<>
                     <Button id='deleteButton' color='danger' size='sm' onClick={this.handleDeleteUser(user._id)}>
                       <FaTrash />
                     </Button>
@@ -94,9 +99,7 @@ class UserList extends Component {
                       Delete
                     </UncontrolledTooltip>
                   </>
-                  ) : (<Button color='danger' style={{ visibility: 'hidden' }} size='sm'>
-                      <FaTrash />
-                    </Button>)}
+                  )}
                 </td>
               </tr>
             ))}

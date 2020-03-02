@@ -14,13 +14,11 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { getDateStr } from '../../../helpers';
 import moment from 'moment';
+import { getDateStr } from '../../../helpers';
 
 const RecordEditSchema = Yup.object().shape({
   destination: Yup.string()
-    .min(2, 'Destination is too short')
-    .max(50, 'Destination is too long')
     .required('This field is required'),
   startDate: Yup.date()
     .required('This field is required'),
@@ -30,7 +28,6 @@ const RecordEditSchema = Yup.object().shape({
       return this.parent.startDate <= value;
     }),
   comment: Yup.string()
-    .min(5, 'Comment is too short')
     .required('This field is required'),
 });
 
@@ -42,6 +39,7 @@ class RecordEdit extends Component {
 
   handleSave = (values) => {
     const { createRecord, updateRecord, match: { params }, history, profile } = this.props;
+    console.log("RecordEdit", values);
     const finalValues = {
       comment: values.comment,
       destination: values.destination,
@@ -153,7 +151,7 @@ class RecordEdit extends Component {
                           <Input
                             id='comment'
                             name='comment'
-                            type='text'
+                            type='textarea'
                             placeholder='Enter comment'
                             value={formik.values.comment}
                             {...formik.getFieldProps('comment')}
@@ -168,7 +166,7 @@ class RecordEdit extends Component {
                     <Row>
                       <Col xs={6}>
                         <Link to='/records' className='btn btn-secondary'>
-                          Cancel
+                          Back
                         </Link>
                       </Col>
                       <Col className='text-right'>

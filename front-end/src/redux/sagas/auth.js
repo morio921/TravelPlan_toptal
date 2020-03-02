@@ -1,5 +1,5 @@
 import { takeLatest } from 'redux-saga/effects';
-import { DO_SIGNIN, DO_SIGNUP } from '../modules/auth';
+import { DO_SIGNIN, DO_SIGNUP, DO_UPDATE_PROFILE } from '../modules/auth';
 import apiCall from '../api/apiCall';
 
 const doSignin = apiCall({
@@ -23,7 +23,17 @@ const doSignup = apiCall({
   }
 });
 
+const doUpdateProfile = apiCall({
+  type: DO_UPDATE_PROFILE,
+  method: 'put',
+  path: ({ payload }) => `/auth/profile/${payload.id}/`,
+  success: (res, action) => {
+    localStorage.setItem('travel_plans_auth', JSON.stringify(res.data));
+  }
+})
+
 export default function* rootSaga () {
   yield takeLatest(DO_SIGNIN, doSignin);
   yield takeLatest(DO_SIGNUP, doSignup);
+  yield takeLatest(DO_UPDATE_PROFILE, doUpdateProfile);
 }

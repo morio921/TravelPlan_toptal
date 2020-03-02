@@ -10,50 +10,45 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
+import { requestSuccess } from '../../../redux/api/request';
+import { DO_UPDATE_PROFILE } from '../../../redux/modules/auth';
 
 const ProfileEditSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, 'First name is too short')
-    .max(50, 'First name is too long')
-    .required('This field is required'),
-  lastName: Yup.string()
-    .min(2, 'Last name is too short')
-    .max(50, 'Last name is too long')
-    .required('This field is required'),
+  firstName: Yup.string(),
+  lastName: Yup.string(),
   email: Yup.string()
-    .email('Invalid email')
-    .required('This field is required'),
-  password: Yup.string()
-    .min(5, 'Password is too short')
-    .required('This field is required'),
+    .email('Invalid email'),
+  password: Yup.string(),
   confirm_password: Yup.string()
     .test('passwords-match', 'Passwords must match', function(value) {
       return this.parent.password === value;
-    })
-    .required('This field is required'),
+    }),
 });
 
 class Profile extends Component {
   handleSave = (values) => {
-    const { updateUser, profile, signout } = this.props;
+    const { updateProfile, auth } = this.props;
 
-    profile._id && updateUser({
-      id: profile._id,
-      body: values,
-      success: () => signout()
+    auth.me._id && updateProfile({
+      id: auth.me._id,
+      body: values
     });
   }
 
   render() {
-    const { profile } = this.props;
+    const { auth } = this.props;
 
     return (
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
+          {auth.status === requestSuccess(DO_UPDATE_PROFILE) &&
+            <Alert className='alert-style' color='info'>Profile is updated sucessufully!</Alert>
+          }
           <Card className='card-header-style'>
             <CardHeader>
               <h2 className='text-center'>
@@ -63,9 +58,9 @@ class Profile extends Component {
             <CardBody>
               <Formik
                 initialValues = {{
-                  firstName: profile.firstName,
-                  lastName: profile.lastName,
-                  email: profile.email,
+                  firstName: auth.me.firstName,
+                  lastName: auth.me.lastName,
+                  email: auth.me.email,
                   password: '',
                   confirm_password: ''
                 }}
@@ -171,7 +166,7 @@ class Profile extends Component {
                     <Row>
                       <Col xs={6}>
                         <Link to='/records' className='btn btn-secondary'>
-                          Cancel
+                          Back
                         </Link>
                       </Col>
                       <Col className='text-right'>

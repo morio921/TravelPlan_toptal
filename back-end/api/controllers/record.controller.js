@@ -1,15 +1,14 @@
 const Record = require('../models/record.model');
-const User = require('../models/user.model');
 const ROLES = require('../constants/role');
 const APIError = require('../utils/api-error');
 
 function create(req, res, next) {
   const recordItem = new Record(req.body);
 
-  recordItem.save()
+  return recordItem.save()
     .then((newRecordItem) => {
       if (!newRecordItem) {
-        return new APIError('Record not created', 404);
+        throw new APIError('Record is not created', 404);
       }
       res.json(newRecordItem);
     })
@@ -19,10 +18,10 @@ function create(req, res, next) {
 function update(req, res, next) {
   Object.assign(req.record, req.body);
 
-  req.record.save()
+  return req.record.save()
     .then((updatedRecordItem) => {
       if (!updatedRecordItem) {
-        return new APIError('Record not created', 404);
+        throw new APIError('Record is not created', 404);
       }
       res.json(updatedRecordItem);
     })
@@ -39,7 +38,7 @@ function list(req, res, next) {
   const { userName, fromDate, toDate } = req.query;
 
   let query = {};
-  if (req.user.role === ROLES.USER || req.user.role === ROLES.USER_MANAGER) {
+  if(req.user.role === ROLES.USER || req.user.role === ROLES.USER_MANAGER) {
     query['userName'] = req.user.firstName + ' ' + req.user.lastName;
   } else {
     query['userName'] = { $regex: userName ? userName : '', $options: 'i' };
@@ -52,12 +51,13 @@ function list(req, res, next) {
   else if(!fromDate && toDate)
     query['startDate'] = { $lte: toDate };
 
-  Record.find(query)
+  return Record.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
+    .sort({ startDate: 1 })
     .then((recordList) => {
       if (!recordList) {
-        return new APIError('Record not created', 404);
+        throw new APIError('Record is not created', 404);
       }
       Record.find(query)
       .then((newList) => {
@@ -77,16 +77,17 @@ function futureList(req, res, next) {
   const nextLastDay = new Date(year, month + 1, 1);
 
   let query = { startDate: { $gte: nextFirstDay, $lt: nextLastDay }};
-  if (req.user.role === ROLES.USER || req.user.role === ROLES.USER_MANAGER) {
+  if(req.user.role === ROLES.USER || req.user.role === ROLES.USER_MANAGER) {
     query['userName'] = req.user.firstName + ' ' + req.user.lastName;
   }
 
-  Record.find(query)
+  return Record.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
+    .sort({ startDate: 1 })
     .then((recordList) => {
       if (!recordList) {
-        return new APIError('Record not created', 404);
+        throw new APIError('Record is not created', 404);
       }
       Record.find(query)
       .then((newList) => {
@@ -107,8 +108,8 @@ function remove(req, res, next) {
 function getRecordById(req, res, next, id) {
   Record.findById(id)
     .then((recordItem) => {
-      if (!recordItem) {
-        return new APIError('Record not created', 404);
+      if(!recordItem) {
+        return new APIError('Record is not created', 404);
       }
 
       const userName = req.user.firstName + ' ' + req.user.lastName;

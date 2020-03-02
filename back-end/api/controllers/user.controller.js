@@ -6,8 +6,8 @@ const APIError = require('../utils/api-error');
 function create(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
-  if (!firstName || !lastName || !email  || !password || !role) {
-    return new APIError('Firstname, lastname, email, password, or role are required', 401);
+  if(!firstName || !lastName || !email  || !password || !role) {
+    return new APIError('Firstname, lastname, email, password, or role is required', 401);
   }
 
   const user = new User({
@@ -18,10 +18,10 @@ function create(req, res, next) {
     user.role = role;
   }
 
-  user.save()
+  return user.save()
     .then((newUserItem) => {
       if (!newUserItem) {
-        return new APIError('User not created', 404);
+        throw new APIError('User is not created', 404);
       }
       res.json(newUserItem);
     })
@@ -36,18 +36,18 @@ function update(req, res, next) {
     firstName, lastName, email
   });
 
-  if (password) {
+  if(password) {
     req.userModel.password = password;
   }
 
-  if ((req.user.role === ROLES.ADMIN || req.user.role === ROLES.USER_MANAGER) && role) {
+  if((req.user.role === ROLES.ADMIN || req.user.role === ROLES.USER_MANAGER) && role) {
     req.userModel.role = role;
   }
 
-  req.userModel.save()
+  return req.userModel.save()
     .then((updatedUserItem) => {
-      if (!updatedUserItem) {
-        return new APIError('User not updated', 404);
+      if(!updatedUserItem) {
+        throw new APIError('User is not updated', 404);
       }
       const newUserName = updatedUserItem.firstName + ' ' + updatedUserItem.lastName;
       Record.updateMany({ userName: oldUserName}, { userName: newUserName })
@@ -68,16 +68,16 @@ function list(req, res, next) {
   const page = parseInt(req.query.page);
 
   let query = {};
-  if (req.user.role === ROLES.MANAGER) {
+  if(req.user.role === ROLES.MANAGER) {
     query = { role: { $ne: ROLES.ADMIN } };   //For getting users except admin users
   }
 
-  User.find(query)
+  return User.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
     .then((userList) => {
-      if (!userList) {
-        return new APIError('Users not founded', 404);
+      if(!userList) {
+        throw new APIError('Users are not founded', 404);
       }
       User.find(query)
       .then((newList) => {
@@ -103,8 +103,8 @@ function remove(req, res, next) {
 function getUserByID(req, res, next, id) {
   User.findById(id)
   .then((userItem) => {
-    if (!userItem) {
-      return new APIError('User not founded', 404);
+    if(!userItem) {
+      return new APIError('User is not founded', 404);
     }
     req.userModel = userItem;
     next();

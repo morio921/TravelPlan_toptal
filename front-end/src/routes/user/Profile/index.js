@@ -4,21 +4,20 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router';
-import { updateUser } from '../../../redux/modules/user';
-import { signout } from '../../../redux/modules/auth';
+import { updateProfile, signout } from '../../../redux/modules/auth';
 import * as selectors from '../../../redux/selectors';
 
 Profile.propTypes = {
-  profile: PropTypes.object,
-  updateUser: PropTypes.func,
+  auth: PropTypes.object,
+  updateProfile: PropTypes.func,
 };
 
 const selector = createStructuredSelector({
-  profile: selectors.profileSelector,
+  auth: selectors.authStateSelector,
 });
 
 const actions = {
-  updateUser,
+  updateProfile,
   signout
 };
 

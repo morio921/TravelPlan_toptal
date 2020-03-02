@@ -9,47 +9,50 @@ import {
   Label,
   Card,
   CardHeader,
-  CardBody
+  CardBody,
+  Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
+import { isManager } from '../../../helpers/roleHelpers';
+import { requestSuccess } from '../../../redux/api/request';
+import { UPDATE_USER, CREATE_USER } from '../../../redux/modules/user';
 
-const roleOptions = [
-  {
-    value: 'user',
-    label: 'User',
-  },
-  {
-    value: 'manager',
-    label: 'User_Manager',
-  },
-  {
-    value: 'admin',
-    label: 'Admin',
-  }
+let roleOptions = [
+  { 'value': 'user', 'label': 'User' },
+  { 'value': 'manager', 'label': 'User Manager' },
+  { 'value': 'admin', 'label': 'Admin' }
 ];
 
 const UserAddSchema = Yup.object().shape({
   firstName: Yup.string()
-    .min(2, 'First name is too short')
-    .max(50, 'First name is too long')
     .required('This field is required'),
   lastName: Yup.string()
-    .min(2, 'Last name is too short')
-    .max(50, 'Last name is too long')
     .required('This field is required'),
   email: Yup.string()
     .email('Invalid email')
     .required('This field is required'),
   password: Yup.string()
-    .min(5, 'Password is too short')
     .required('This field is required'),
   confirm_password: Yup.string()
     .test('passwords-match', 'Passwords must match', function(value) {
       return this.parent.password === value;
     })
     .required('This field is required'),
+});
+
+const UserEditSchema = Yup.object().shape({
+  firstName: Yup.string(),
+  lastName: Yup.string(),
+  email: Yup.string()
+    .email('Invalid email'),
+  password: Yup.string(),
+  confirm_password: Yup.string()
+    .test('passwords-match', 'Passwords must match', function(value) {
+      return this.parent.password === value;
+    }),
 });
 
 class UserEdit extends Component {
@@ -59,26 +62,32 @@ class UserEdit extends Component {
   }
 
   handleSave = (values) => {
-    const { createUser, updateUser, match: { params }, history } = this.props;
+    const { createUser, updateUser, match: { params } } = this.props;
 
     params.id
       ? updateUser({
         id: params.id,
-        body: values,
-        success: () => history.push('/users')
+        body: values
       })
       : createUser({
-        body: values,
-        success: () => history.push('/users')
+        body: values
       });
   }
 
   render() {
-    const { userState, match: { params } } = this.props;
+    const { userState, auth, match: { params } } = this.props;
+    let roles = roleOptions;
+    if(isManager(auth)) roles = _.reject(roles, { 'value': 'admin' });
 
     return (
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
+          {userState.status === requestSuccess(UPDATE_USER) &&
+            <Alert className='alert-style' color='info'>User is updated sucessufully!</Alert>
+          }
+          {userState.status === requestSuccess(CREATE_USER) &&
+            <Alert className='alert-style' color='info'>User is created sucessufully!</Alert>
+          }
           <Card className='card-header-style'>
             <CardHeader>
               <h2 className='text-center'>
@@ -102,7 +111,7 @@ class UserEdit extends Component {
                   password: '',
                   confirm_password: ''
                 }}
-                validationSchema={UserAddSchema}
+                validationSchema={params.id ? UserEditSchema : UserAddSchema}
                 onSubmit={this.handleSave}
                 enableReinitialize
               >
@@ -174,8 +183,8 @@ class UserEdit extends Component {
                             value={formik.values.role}
                             {...formik.getFieldProps('role')}
                           >
-                            {roleOptions.map((roleItem, key) => (
-                              <option value={roleItem.value} key={key}>{roleItem.label}</option>
+                            {roles.map((roleItem, key) => (
+                              <option value={roleItem['value']} key={key}>{roleItem['label']}</option>
                             ))}
                           </Input>
                           {formik.errors.role && formik.touched.role ? (
@@ -226,7 +235,7 @@ class UserEdit extends Component {
                     <Row>
                       <Col xs={6}>
                         <Link to='/users' className='btn btn-secondary'>
-                          Cancel
+                          Back
                         </Link>
                       </Col>
                       <Col className='text-right'>

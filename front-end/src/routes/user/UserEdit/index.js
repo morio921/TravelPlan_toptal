@@ -17,10 +17,12 @@ UserEdit.propTypes = {
   history: PropTypes.object,
   updateUser: PropTypes.func,
   userState: PropTypes.object,
+  auth: PropTypes.object,
 };
 
 const selector = createStructuredSelector({
-  userState: selectors.userStateSelector
+  userState: selectors.userStateSelector,
+  auth: selectors.profileSelector
 });
 
 const actions = {

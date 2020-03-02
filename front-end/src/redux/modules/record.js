@@ -29,8 +29,6 @@ const initialState = {
   records: [],
   params: {
     count: 0,
-    previous: null,
-    next: null,
     page_size: 10,
     page: 1
   },
@@ -59,7 +57,8 @@ export default handleActions({
     records: payload.results,
     params: {
       count: payload.count,
-      ...state.params,
+      page: 1,
+      page_size: state.params.page_size,
       ...omit(payload, 'results')
     },
     error: null
@@ -77,7 +76,8 @@ export default handleActions({
     records: payload.results,
     params: {
       count: payload.count,
-      ...state.params,
+      page: 1,
+      page_size: state.params.page_size,
       ...omit(payload, 'results')
     },
     error: null
@@ -120,8 +120,9 @@ export default handleActions({
     status: requestSuccess(DELETE_RECORD),
     records: reject(state.records, { id: payload.id }),
     params: {
-      ...state.params,
       count: Math.max(state.params.count - 1, 0),
+      page: 1,
+      page_size: state.params.page_size
     },
     error: null
   }),

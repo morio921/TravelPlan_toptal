@@ -7,6 +7,7 @@ import { requestSuccess, requestFail } from '../api/request';
 export const DO_SIGNIN = 'DO_SIGNIN';
 export const DO_SIGNUP = 'DO_SIGNUP';
 export const DO_SIGNOUT = 'DO_SIGNOUT';
+export const DO_UPDATE_PROFILE = 'DO_UPDATE_PROFILE';
 
 // ------------------------------------
 // Actions
@@ -17,6 +18,7 @@ export const signup = createAction(DO_SIGNUP);
 export const signout = createAction(DO_SIGNOUT, () => {
   localStorage.removeItem('travel_plans_auth');
 });
+export const updateProfile = createAction(DO_UPDATE_PROFILE);
 
 const getInitialState = () => {
   let authRestore = JSON.parse(localStorage.getItem('travel_plans_auth') || null)
@@ -71,6 +73,20 @@ export default handleActions({
     token: null,
     status: requestFail(DO_SIGNUP),
     me: null,
+    error: payload
+  }),
+
+  [requestSuccess(DO_UPDATE_PROFILE)]: (state, { payload }) => ({
+    ...state,
+    status: requestSuccess(DO_UPDATE_PROFILE),
+    user: payload.info,
+    me: payload.info,
+    error: null
+  }),
+
+  [requestFail(DO_UPDATE_PROFILE)]: (state, { payload }) => ({
+    ...state,
+    status: requestFail(DO_UPDATE_PROFILE),
     error: payload
   }),
 }, getInitialState())

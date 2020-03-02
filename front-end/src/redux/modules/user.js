@@ -27,8 +27,6 @@ const initialState = {
   users: [],
   params: {
     count: 0,
-    previous: null,
-    next: null,
     page_size: 10,
     page: 1
   },

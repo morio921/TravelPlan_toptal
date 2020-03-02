@@ -7,7 +7,7 @@ import { authStatusSelector } from '../../../redux/selectors';
 import { signin } from '../../../redux/modules/auth';
 
 Signin.propTypes = {
-  auth: PropTypes.object,
+  auth: PropTypes.string,
   signin: PropTypes.func,
   history: PropTypes.object
 };
