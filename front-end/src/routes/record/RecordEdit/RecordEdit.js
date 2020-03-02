@@ -10,12 +10,15 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Alert,
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { getDateStr } from '../../../helpers';
+import { requestSuccess } from '../../../redux/api/request';
+import { UPDATE_RECORD, CREATE_RECORD } from '../../../redux/modules/record';
 
 const RecordEditSchema = Yup.object().shape({
   destination: Yup.string()
@@ -38,7 +41,7 @@ class RecordEdit extends Component {
   }
 
   handleSave = (values) => {
-    const { createRecord, updateRecord, match: { params }, history, profile } = this.props;
+    const { createRecord, updateRecord, match: { params }, profile } = this.props;
     console.log("RecordEdit", values);
     const finalValues = {
       comment: values.comment,
@@ -51,10 +54,8 @@ class RecordEdit extends Component {
     params.id ? updateRecord({
       id: params.id,
       body: finalValues,
-      success: () => history.push('/records')
     }) : createRecord({
       body: finalValues,
-      success: () => history.push('/records')
     });
   }
 
@@ -64,6 +65,12 @@ class RecordEdit extends Component {
     return (
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
+          {recordState.status === requestSuccess(UPDATE_RECORD) &&
+            <Alert className='alert-style' color='info'>Record is updated sucessufully!</Alert>
+          }
+          {recordState.status === requestSuccess(CREATE_RECORD) &&
+            <Alert className='alert-style' color='info'>Record is created sucessufully!</Alert>
+          }
           <Card className='card-header-style'>
             <CardHeader>
               <h2 className='text-center'>

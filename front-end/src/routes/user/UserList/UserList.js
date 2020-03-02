@@ -24,11 +24,17 @@ class UserList extends Component {
 
   handleDeleteUser = (id) => () => {
     const { deleteUser, getUsers, params } = this.props;
-    confirm('Do you really want to delete this user?')
+    confirm('Are you sure to delete this user?')
       .then(() => {
         deleteUser({
           id,
-          success: () => getUsers({ params })
+          success: () => getUsers({
+            params: {
+              count: params.count,
+              page: 1,
+              page_size: params.page_size
+            }
+          })
         });
       }
     )
@@ -50,7 +56,7 @@ class UserList extends Component {
 
     return (
       <div>
-        <h2 className='text-center mb-5'>User List</h2>
+        <h2 className='text-center mb-5'>All Users</h2>
         <div className='text-right mb-2'>
           <Link to='/users/new' className='btn btn-primary'>
             <FaUserPlus size='1.2em' /> Add User

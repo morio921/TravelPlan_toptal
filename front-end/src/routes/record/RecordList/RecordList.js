@@ -44,12 +44,18 @@ class RecordList extends Component {
 
   handleDeleteRecord = (id) => () => {
     const { deleteRecord, getRecords, params } = this.props;
-    confirm('Are you sure to delete this record?').then(
-      () => {
+    confirm('Are you sure to delete this record?')
+      .then(() => {
         deleteRecord({
           id,
-          success: () => getRecords({ params })
-        })
+          success: () => getRecords({
+            params: {
+              count: params.count,
+              page: 1,
+              page_size: params.page_size
+            }
+          }),
+        });
       }
     )
   }
@@ -89,7 +95,7 @@ class RecordList extends Component {
 
     return (
       <div>
-        <h2 className='text-center mb-5'>All Travel Records</h2>
+        <h2 className='text-center mb-5'>All Travel Plans</h2>
         <Row className='text-right mb-3'>
           <Col md={10} xs={12}>
             <Formik

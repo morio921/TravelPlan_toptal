@@ -52,7 +52,9 @@ const doDeleteRecord = apiCall({
   type: DELETE_RECORD,
   method: 'delete',
   path: ({ payload }) => `/record/${payload.id}`,
-  payloadOnSuccess: (res, { payload }) => ({ id: payload.id })
+  payloadOnSuccess: (res, { payload }) => ({
+    id: payload.id
+  })
 })
 
 export default function* rootSaga () {
