@@ -13,17 +13,9 @@ import {
   CardBody,
 } from 'reactstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { DO_SIGNIN } from '../../../redux/modules/auth';
 import { requestFail } from '../../../redux/api/request';
-
-const SigninSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email')
-    .required('This field is required'),
-  password: Yup.string()
-    .required('This field is required'),
-});
+import { SigninSchema } from '../../../helpers/validationHelpers';
 
 class Signin extends Component {
   handleSignin = (values) => {

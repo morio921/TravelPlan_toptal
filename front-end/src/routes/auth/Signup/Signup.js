@@ -13,26 +13,9 @@ import {
   Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { requestSuccess, requestFail } from '../../../redux/api/request';
 import { DO_SIGNUP } from '../../../redux/modules/auth';
-
-const SignupSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('This field is required'),
-  lastName: Yup.string()
-    .required('This field is required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('This field is required'),
-  password: Yup.string()
-    .required('This field is required'),
-  confirm_password: Yup.string()
-    .test('passwords-match', 'Passwords must match', function(value) {
-      return this.parent.password === value;
-    })
-    .required('This field is required'),
-});
+import { UserAddSchema } from '../../../helpers/validationHelpers';
 
 class Signup extends Component {
   handleSignup = (values) => {
@@ -67,7 +50,7 @@ class Signup extends Component {
                   password: '',
                   confirm_password: ''
                 }}
-                validationSchema={SignupSchema}
+                validationSchema={UserAddSchema}
                 onSubmit={this.handleSignup}
               >
                 {formik => (

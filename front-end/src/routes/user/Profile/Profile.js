@@ -13,22 +13,10 @@ import {
   Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { requestSuccess } from '../../../redux/api/request';
 import { DO_UPDATE_PROFILE } from '../../../redux/modules/auth';
-
-const ProfileEditSchema = Yup.object().shape({
-  firstName: Yup.string(),
-  lastName: Yup.string(),
-  email: Yup.string()
-    .email('Invalid email'),
-  password: Yup.string(),
-  confirm_password: Yup.string()
-    .test('passwords-match', 'Passwords must match', function(value) {
-      return this.parent.password === value;
-    }),
-});
+import { UserEditSchema } from '../../../helpers/validationHelpers';
 
 class Profile extends Component {
   handleSave = (values) => {
@@ -64,7 +52,7 @@ class Profile extends Component {
                   password: '',
                   confirm_password: ''
                 }}
-                validationSchema={ProfileEditSchema}
+                validationSchema={UserEditSchema}
                 onSubmit={this.handleSave}
                 enableReinitialize
               >

@@ -13,26 +13,12 @@ import {
   Alert,
 } from 'reactstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { getDateStr } from '../../../helpers';
 import { requestSuccess } from '../../../redux/api/request';
 import { UPDATE_RECORD, CREATE_RECORD } from '../../../redux/modules/record';
-
-const RecordEditSchema = Yup.object().shape({
-  destination: Yup.string()
-    .required('This field is required'),
-  startDate: Yup.date()
-    .required('This field is required'),
-  endDate: Yup.date()
-    .required('This field is required')
-    .test('date-compare', 'End date must be later than start date', function(value) {
-      return this.parent.startDate <= value;
-    }),
-  comment: Yup.string()
-    .required('This field is required'),
-});
+import { RecordEditSchema } from '../../../helpers/validationHelpers';
 
 class RecordEdit extends Component {
   componentDidMount() {

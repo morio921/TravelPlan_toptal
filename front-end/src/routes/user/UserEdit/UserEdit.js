@@ -13,47 +13,18 @@ import {
   Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { isManager } from '../../../helpers/roleHelpers';
 import { requestSuccess } from '../../../redux/api/request';
 import { UPDATE_USER, CREATE_USER } from '../../../redux/modules/user';
+import { UserAddSchema, UserEditSchema } from '../../../helpers/validationHelpers';
 
 let roleOptions = [
   { 'value': 'user', 'label': 'User' },
   { 'value': 'manager', 'label': 'User Manager' },
   { 'value': 'admin', 'label': 'Admin' }
 ];
-
-const UserAddSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('This field is required'),
-  lastName: Yup.string()
-    .required('This field is required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('This field is required'),
-  password: Yup.string()
-    .required('This field is required'),
-  confirm_password: Yup.string()
-    .test('passwords-match', 'Passwords must match', function(value) {
-      return this.parent.password === value;
-    })
-    .required('This field is required'),
-});
-
-const UserEditSchema = Yup.object().shape({
-  firstName: Yup.string(),
-  lastName: Yup.string(),
-  email: Yup.string()
-    .email('Invalid email'),
-  password: Yup.string(),
-  confirm_password: Yup.string()
-    .test('passwords-match', 'Passwords must match', function(value) {
-      return this.parent.password === value;
-    }),
-});
 
 class UserEdit extends Component {
   componentDidMount() {

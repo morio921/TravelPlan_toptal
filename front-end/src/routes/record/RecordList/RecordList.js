@@ -11,7 +11,6 @@ import {
   UncontrolledTooltip 
 } from 'reactstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import {
   FaRegCalendarPlus,
   FaRegEdit,
@@ -24,17 +23,7 @@ import { getDateStr } from '../../../helpers';
 import { isAdmin } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
-
-const RecordFilterSchema = Yup.object().shape({
-  userName: Yup.string(),
-  fromDate: Yup.date(),
-  toDate: Yup.date()
-    .test('date-compare', 'End date must be later than state date', function(value) {
-      if(this.parent.fromDate && value)
-        return this.parent.fromDate <= value;
-      return true;
-    })
-});
+import { RecordFilterSchema } from '../../../helpers/validationHelpers';
 
 class RecordList extends Component {
   componentDidMount() {
