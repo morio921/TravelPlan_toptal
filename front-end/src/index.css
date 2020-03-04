@@ -12,8 +12,16 @@ code {
     monospace;
 }
 
+.navbar-backcolor {
+  background-color: #cce5ff !important;
+}
+
 .card-header-style {
   margin-top: 40px;
+}
+
+.card-header-backcolor {
+  background-color: #cce5ff !important;
 }
 
 .validation-color {

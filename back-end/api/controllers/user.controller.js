@@ -7,7 +7,7 @@ function create(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
   if(!firstName || !lastName || !email  || !password || !role) {
-    return new APIError('Firstname, lastname, email, password, or role is required', 401);
+    throw new APIError('Firstname, lastname, email, password, or role is required', 401);
   }
 
   const user = new User({
@@ -18,7 +18,7 @@ function create(req, res, next) {
     user.role = role;
   }
 
-  return user.save()
+  user.save()
     .then((newUser) => {
       if (!newUser) {
         throw new APIError('User is not created', 404);
@@ -44,7 +44,7 @@ function update(req, res, next) {
     req.userModel.role = role;
   }
 
-  return req.userModel.save()
+  req.userModel.save()
     .then((updatedUser) => {
       if(!updatedUser) {
         throw new APIError('User is not updated', 404);
@@ -72,7 +72,7 @@ function list(req, res, next) {
     query = { role: { $ne: ROLES.ADMIN } };   //For getting users except admin users
   }
 
-  return User.find(query)
+  User.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
     .then((users) => {
@@ -91,7 +91,7 @@ function list(req, res, next) {
 }
 
 function remove(req, res, next) {
-  return req.userModel.remove()
+  req.userModel.remove()
     .then(() => {
       const userFullName = req.userModel.firstName + ' ' + req.userModel.lastName;
 
@@ -108,7 +108,7 @@ function getUserByID(req, res, next, id) {
   User.findById(id)
   .then((user) => {
     if(!user) {
-      return new APIError('User is not founded', 404);
+      throw new APIError('User is not founded', 404);
     }
     req.userModel = user;
     next();

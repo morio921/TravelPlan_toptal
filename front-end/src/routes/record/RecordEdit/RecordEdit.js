@@ -72,7 +72,7 @@ class RecordEdit extends Component {
             <Alert className='alert-style' color='info'>Record is created sucessufully!</Alert>
           }
           <Card className='card-header-style'>
-            <CardHeader>
+            <CardHeader className='card-header-backcolor'>
               <h2 className='text-center'>
                 {params.id ? 'Edit Plan' : 'Add Plan'}
               </h2>

@@ -5,7 +5,7 @@ const APIError = require('../utils/api-error');
 function create(req, res, next) {
   const record = new Record(req.body);
 
-  return record.save()
+  record.save()
     .then((newRecord) => {
       if (!newRecord) {
         throw new APIError('Record is not created', 404);
@@ -18,7 +18,7 @@ function create(req, res, next) {
 function update(req, res, next) {
   Object.assign(req.record, req.body);
 
-  return req.record.save()
+  req.record.save()
     .then((updatedRecord) => {
       if (!updatedRecord) {
         throw new APIError('Record is not created', 404);
@@ -51,7 +51,7 @@ function list(req, res, next) {
   else if(!fromDate && toDate)
     query['startDate'] = { $lte: toDate };
 
-  return Record.find(query)
+  Record.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
     .sort({ startDate: 1 })
@@ -84,7 +84,7 @@ function futureList(req, res, next) {
     query['userName'] = req.user.firstName + ' ' + req.user.lastName;
   }
 
-  return Record.find(query)
+  Record.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
     .sort({ startDate: 1 })
@@ -104,7 +104,7 @@ function futureList(req, res, next) {
 }
 
 function remove(req, res, next) {
-  return req.record.remove()
+  req.record.remove()
     .then(() => {
       res.json(req.record._id);
     })
@@ -115,12 +115,12 @@ function getRecordById(req, res, next, id) {
   Record.findById(id)
     .then((record) => {
       if(!record) {
-        return new APIError('Record is not created', 404);
+        throw new APIError('Record is not created', 404);
       }
 
       const userName = req.user.firstName + ' ' + req.user.lastName;
       if(record.userName !== userName && req.user.role !== ROLES.ADMIN) {
-        return new APIError('User is not authorized to access this record', 403);
+        throw new APIError('User is not authorized to access this record', 403);
       }
 
       req.record = record;

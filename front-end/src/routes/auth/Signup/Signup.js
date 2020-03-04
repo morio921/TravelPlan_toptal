@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { requestSuccess } from '../../../redux/api/request';
+import { requestSuccess, requestFail } from '../../../redux/api/request';
 import { DO_SIGNUP } from '../../../redux/modules/auth';
 
 const SignupSchema = Yup.object().shape({
@@ -51,8 +51,11 @@ class Signup extends Component {
           {auth.status === requestSuccess(DO_SIGNUP) &&
             <Alert className='alert-style' color='info'>User is created successfully!</Alert>
           }
+          {auth.status === requestFail(DO_SIGNUP) &&
+            <Alert className='alert-style' color='danger'>{auth.error.data.message}</Alert>
+          }
           <Card className='card-header-style'>
-            <CardHeader>
+            <CardHeader className='card-header-backcolor'>
               <h2 className='text-center'>Sign Up</h2>
             </CardHeader>
             <CardBody>

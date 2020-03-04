@@ -50,7 +50,7 @@ class Profile extends Component {
             <Alert className='alert-style' color='info'>Profile is updated sucessufully!</Alert>
           }
           <Card className='card-header-style'>
-            <CardHeader>
+            <CardHeader className='card-header-backcolor'>
               <h2 className='text-center'>
                 Edit Profile
               </h2>

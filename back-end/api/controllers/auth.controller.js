@@ -8,10 +8,10 @@ function signIn(req, res, next) {
   const { email, password } = req.body;
 
   if(!email || !password) {
-    return new APIError('Email and password are required', 401);
+    throw new APIError('Email and password are required', 401);
   }
 
-  return User.findOne({ email })
+  User.findOne({ email })
     .select('_id firstName lastName email password role')
     .exec()
     .then((user) => {
@@ -42,21 +42,34 @@ function signUp(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
 
   if(!firstName || !lastName || !email || !password) {
-    return new APIError('Firstname, lastname, email, or password is required', 401);
+    throw new APIError('Firstname, lastname, email, or password is required', 401);
   }
 
-  const user = new User({
-    firstName, lastName, email, password
-  });
+  if(firstName.indexOf(' ') >= 0 || lastName.indexOf(' ') >= 0) {
+    console.log("has whitespace");
+    throw new APIError('FirstName or lastName can not include whitespace', 400);
+  }
 
-  return user.save()
-    .then((newUser) => {
-      if (!newUser) {
-        throw new APIError('User is not created', 404);
-      }
-      res.json(newUser);
-    })
-    .catch(next);
+  User.findOne({ email })
+  .then((oldUser) => {
+    if(oldUser) {
+      throw new APIError('This email is already exist!', 400);
+    }
+
+    const user = new User({
+      firstName, lastName, email, password
+    });
+  
+    return user.save()
+      .then((newUser) => {
+        if (!newUser) {
+          throw new APIError('User is not created', 404);
+        }
+        res.json(newUser);
+      })
+      .catch(next);
+  })
+  .catch(next);
 }
 
 async function updateProfile(req, res, next) {
@@ -77,7 +90,7 @@ async function updateProfile(req, res, next) {
       throw new APIError('User is not updated', 404);
     
     const newUserName = updatedUser.firstName + ' ' + updatedUser.lastName;
-    const recordList = await Record.updateMany({ userName: oldUserName}, { userName: newUserName })
+    await Record.updateMany({ userName: oldUserName}, { userName: newUserName })
 
     const { _id, firstName, lastName, email, role } = updatedUser;
 

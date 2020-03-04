@@ -46,7 +46,7 @@ class Header extends React.Component {
 
     return (
       <div>
-        <Navbar color='light' light expand='md'>
+        <Navbar className='navbar-backcolor' light expand='md'>
           <NavbarBrand href='/records'>
             <h3>Travel Plans</h3>
           </NavbarBrand>

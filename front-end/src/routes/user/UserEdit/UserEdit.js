@@ -89,7 +89,7 @@ class UserEdit extends Component {
             <Alert className='alert-style' color='info'>User is created successfully!</Alert>
           }
           <Card className='card-header-style'>
-            <CardHeader>
+            <CardHeader className='card-header-backcolor'>
               <h2 className='text-center'>
                 {params.id ? 'Edit User' : 'Add User'}
               </h2>

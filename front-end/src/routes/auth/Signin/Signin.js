@@ -44,7 +44,7 @@ class Signin extends Component {
             <Alert className='alert-style' color='danger'>{auth.error.data.message}</Alert>
           }
           <Card className='card-header-style'>
-            <CardHeader>
+            <CardHeader className='card-header-backcolor'>
               <h2 className='text-center'>Log In</h2>
             </CardHeader>
             <CardBody>
