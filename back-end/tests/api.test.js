@@ -8,13 +8,24 @@ describe('api', () => {
     app.close(done);
   });
 
-  test('should login with correct credentials', () =>
+  test('login with correct email and password', () =>
     request(app).post('/api/auth/signin')
     .send({
       email: 'morioyoshida@gmail.com',
       password: 'morio',
-    }).then((resp) => {
-      expect(resp.statusCode).toBe(200);
+    }).then((response) => {
+      expect(response.statusCode).toBe(200);
+    })
+  );
+
+  test('login with incorrect email and password', () =>
+    request(app).post('/api/auth/signin')
+    .send({
+      email: 'test@gmail.com',
+      password: 'test',
+    }).then((response) => {
+      expect(response.statusCode).toBe(401);
+      expect(response.body.message).toBe('Email or password is not correct');
     })
   );
 });

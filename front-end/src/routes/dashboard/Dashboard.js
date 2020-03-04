@@ -69,7 +69,7 @@ class Dashboard extends Component {
             </tr>
           </thead>
           <tbody>
-            {recordsList && recordsList.map((record, index) => (
+            {recordsList.map((record, index) => (
               <tr key={index}>
                 <th className='text-center' scope='row'>{index + 1}</th>
                 {isAdmin(profile) && <td className='text-center'>{record.userName}</td>}

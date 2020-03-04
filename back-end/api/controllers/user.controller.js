@@ -19,11 +19,11 @@ function create(req, res, next) {
   }
 
   return user.save()
-    .then((newUserItem) => {
-      if (!newUserItem) {
+    .then((newUser) => {
+      if (!newUser) {
         throw new APIError('User is not created', 404);
       }
-      res.json(newUserItem);
+      res.json(newUser);
     })
     .catch(next);
 }
@@ -45,14 +45,14 @@ function update(req, res, next) {
   }
 
   return req.userModel.save()
-    .then((updatedUserItem) => {
-      if(!updatedUserItem) {
+    .then((updatedUser) => {
+      if(!updatedUser) {
         throw new APIError('User is not updated', 404);
       }
-      const newUserName = updatedUserItem.firstName + ' ' + updatedUserItem.lastName;
+      const newUserName = updatedUser.firstName + ' ' + updatedUser.lastName;
       Record.updateMany({ userName: oldUserName}, { userName: newUserName })
         .then(() => {
-          res.json(updatedUserItem);
+          res.json(updatedUser);
         })
         .catch(next);
     })
@@ -75,22 +75,26 @@ function list(req, res, next) {
   return User.find(query)
     .skip((page - 1) * page_size)
     .limit(page_size)
-    .then((userList) => {
-      if(!userList) {
+    .then((users) => {
+      if(!users) {
         throw new APIError('Users are not founded', 404);
       }
       User.find(query)
-      .then((newList) => {
-        res.json({"results": userList, "count": newList.length});
+      .then((newUsers) => {
+        res.json({
+          "results": users,
+          "count": newUsers.length
+        });
       })
     })
     .catch(next);
 }
 
 function remove(req, res, next) {
-  req.userModel.remove()
+  return req.userModel.remove()
     .then(() => {
       const userFullName = req.userModel.firstName + ' ' + req.userModel.lastName;
+
       Record.remove({ userName: userFullName })
       .then(() => {
         res.json(req.userModel._id);
@@ -102,11 +106,11 @@ function remove(req, res, next) {
 
 function getUserByID(req, res, next, id) {
   User.findById(id)
-  .then((userItem) => {
-    if(!userItem) {
+  .then((user) => {
+    if(!user) {
       return new APIError('User is not founded', 404);
     }
-    req.userModel = userItem;
+    req.userModel = user;
     next();
   })
   .catch(next);

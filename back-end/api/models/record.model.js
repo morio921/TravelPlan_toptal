@@ -4,7 +4,6 @@ const { Schema } = mongoose;
 const recordSchema = new Schema({
   destination: {
     type: String,
-    required: true,
     default: ''
   },
   startDate: {

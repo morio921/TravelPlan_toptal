@@ -83,10 +83,10 @@ class UserEdit extends Component {
       <Row>
         <Col sm={12} md={{ size: 4, offset: 4 }}>
           {userState.status === requestSuccess(UPDATE_USER) &&
-            <Alert className='alert-style' color='info'>User is updated sucessufully!</Alert>
+            <Alert className='alert-style' color='info'>User is updated successfully!</Alert>
           }
           {userState.status === requestSuccess(CREATE_USER) &&
-            <Alert className='alert-style' color='info'>User is created sucessufully!</Alert>
+            <Alert className='alert-style' color='info'>User is created successfully!</Alert>
           }
           <Card className='card-header-style'>
             <CardHeader>

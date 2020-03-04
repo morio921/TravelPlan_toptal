@@ -14,15 +14,14 @@ function signIn(req, res, next) {
   return User.findOne({ email })
     .select('_id firstName lastName email password role')
     .exec()
-    .then((userItem) => {
-      console.log("auth controller useritem", userItem);
-      if (!userItem) {
-        throw new APIError('Email address is not correct', 401);
+    .then((user) => {
+      if (!user) {
+        throw new APIError('Email or password is not correct', 401);
       }
 
-      return userItem.authenticate(password)
+      return user.authenticate(password)
         .then(() => {
-          const { _id, firstName, lastName, email, role } = userItem;
+          const { _id, firstName, lastName, email, role } = user;
 
           const token = jwt.sign({
             _id, firstName, lastName, email, role
@@ -33,7 +32,7 @@ function signIn(req, res, next) {
           });
         })
         .catch(() => {
-          throw new APIError('Password is not correct', 401);
+          throw new APIError('Email or password is not correct', 401);
         });
     })
     .catch(next);
@@ -43,19 +42,19 @@ function signUp(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
 
   if(!firstName || !lastName || !email || !password) {
-    return new APIError('Firstname, lastname, email, and password are required', 401);
+    return new APIError('Firstname, lastname, email, or password is required', 401);
   }
 
-  const userItem = new User({
+  const user = new User({
     firstName, lastName, email, password
   });
 
-  return userItem.save()
-    .then((newUserItem) => {
-      if (!newUserItem) {
+  return user.save()
+    .then((newUser) => {
+      if (!newUser) {
         throw new APIError('User is not created', 404);
       }
-      res.json(newUserItem);
+      res.json(newUser);
     })
     .catch(next);
 }
@@ -73,14 +72,14 @@ async function updateProfile(req, res, next) {
   }
 
   try {
-    const updatedUserItem = await req.userModel.save();
-    if(!updatedUserItem)
+    const updatedUser = await req.userModel.save();
+    if(!updatedUser)
       throw new APIError('User is not updated', 404);
     
-    const newUserName = updatedUserItem.firstName + ' ' + updatedUserItem.lastName;
+    const newUserName = updatedUser.firstName + ' ' + updatedUser.lastName;
     const recordList = await Record.updateMany({ userName: oldUserName}, { userName: newUserName })
 
-    const { _id, firstName, lastName, email, role } = updatedUserItem;
+    const { _id, firstName, lastName, email, role } = updatedUser;
 
     const token = jwt.sign({
       _id, firstName, lastName, email, role
@@ -96,11 +95,11 @@ async function updateProfile(req, res, next) {
 
 function getUserByID(req, res, next, id) {
   User.findById(id)
-  .then((userItem) => {
-    if(!userItem) {
+  .then((user) => {
+    if(!user) {
       return new APIError('User is not founded', 404);
     }
-    req.userModel = userItem;
+    req.userModel = user;
     next();
   })
   .catch(next);
