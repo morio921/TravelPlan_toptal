@@ -9,7 +9,7 @@ import {
   createRecord,
   getRecord,
   updateRecord,
-} from '../../../redux/modules/record';
+} from '../../../redux/actions/record';
 
 RecordEdit.propTypes = {
   createRecord: PropTypes.func,

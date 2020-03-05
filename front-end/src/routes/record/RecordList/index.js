@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import {
   getRecords,
   deleteRecord
-} from '../../../redux/modules/record';
+} from '../../../redux/actions/record';
 import {
   recordsListSelector,
   recordsParamsSelector,

@@ -1,37 +1,37 @@
 import { get } from 'lodash';
 
 export const authStateSelector = (state) =>
-  get(state, 'auth')
+  get(state, 'auth');
 
 export const authStatusSelector = (state) =>
-  get(state, 'auth.status')
+  get(state, 'auth.status');
 
 export const userDetailSelector = (state) =>
-  get(state, 'user.user', {})
+  get(state, 'user.user', {});
 
 export const usersListSelector = (state) =>
-  get(state, 'user.users', [])
+  get(state, 'user.users', []);
 
 export const userStateSelector = (state) =>
-  get(state, 'user', {})
+  get(state, 'user', {});
 
 export const reportSelector = (state) =>
-  get(state, 'user.report', {})
+  get(state, 'user.report', {});
 
 export const usersParamsSelector = (state) =>
-  get(state, 'user.params', {})
+  get(state, 'user.params', {});
 
 export const profileSelector = (state) =>
-  get(state, 'auth.me', null)
+  get(state, 'auth.me', null);
 
 export const recordDetailSelector = (state) =>
-  get(state, 'record.record', {})
+  get(state, 'record.record', {});
 
 export const recordsListSelector = (state) =>
-  get(state, 'record.records', [])
+  get(state, 'record.records', []);
 
 export const recordStateSelector = (state) =>
-  get(state, 'record', {})
+  get(state, 'record', {});
 
 export const recordsParamsSelector = (state) =>
-  get(state, 'record.params', {})
+  get(state, 'record.params', {});

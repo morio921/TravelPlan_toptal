@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router';
-import { updateProfile, signout } from '../../../redux/modules/auth';
+import { updateProfile, signout } from '../../../redux/actions/auth';
 import * as selectors from '../../../redux/selectors';
 
 Profile.propTypes = {

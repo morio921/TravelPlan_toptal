@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router';
-import { getFutureRecords, deleteRecord } from '../../redux/modules/record';
+import { getFutureRecords, deleteRecord } from '../../redux/actions/record';
 import { recordsListSelector, recordsParamsSelector, profileSelector } from '../../redux/selectors';
 
 Dashboard.propTypes = {

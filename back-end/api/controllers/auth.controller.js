@@ -4,11 +4,14 @@ const User = require('../models/user.model');
 const Record = require('../models/record.model');
 const APIError = require('../utils/api-error');
 
+/**
+ * Sign in API (url: '/auth/signin', method: post)
+ */
 function signIn(req, res, next) {
   const { email, password } = req.body;
 
   if(!email || !password) {
-    throw new APIError('Email and password are required', 401);
+    throw new APIError('Email and password are required', 400);
   }
 
   User.findOne({ email })
@@ -38,11 +41,14 @@ function signIn(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Sign up API (url: '/auth/signup', method: post)
+ */
 function signUp(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
 
   if(!firstName || !lastName || !email || !password) {
-    throw new APIError('Firstname, lastname, email, or password is required', 401);
+    throw new APIError('Firstname, lastname, email, or password is required', 400);
   }
 
   if(firstName.indexOf(' ') >= 0 || lastName.indexOf(' ') >= 0) {
@@ -71,7 +77,10 @@ function signUp(req, res, next) {
   .catch(next);
 }
 
-async function updateProfile(req, res, next) {
+/**
+ * Update the logged-in user's profile (url: '/auth/profile/:userId', method: put)
+ */
+function updateProfile(req, res, next) {
   const { firstName, lastName, email, password } = req.body;
   const oldUserName = req.userModel.firstName + ' ' + req.userModel.lastName;
 
@@ -83,28 +92,32 @@ async function updateProfile(req, res, next) {
     req.userModel.password = password;
   }
 
-  try {
-    const updatedUser = await req.userModel.save();
+  req.userModel.save()
+  .then((updatedUser) => {
     if(!updatedUser)
       throw new APIError('User is not updated', 404);
     
     const newUserName = updatedUser.firstName + ' ' + updatedUser.lastName;
-    await Record.updateMany({ userName: oldUserName}, { userName: newUserName })
+    Record.updateMany({ userName: oldUserName}, { userName: newUserName })
+      .then(() => {
+        const { _id, firstName, lastName, email, role } = updatedUser;
 
-    const { _id, firstName, lastName, email, role } = updatedUser;
+        const token = jwt.sign({
+          _id, firstName, lastName, email, role
+        }, config.jwtSecret, { expiresIn: config.jwtExpires });
 
-    const token = jwt.sign({
-      _id, firstName, lastName, email, role
-    }, config.jwtSecret, { expiresIn: config.jwtExpires });
-
-    return res.json({
-      info: { _id, firstName, lastName, email, role }, token,
-    });
-  } catch(err) {
-    return err;
-  }
+        res.json({
+          info: { _id, firstName, lastName, email, role }, token,
+        });
+      })
+      .catch(next);
+  })
+  .catch(next);
 }
 
+/**
+ * Get user by user id ('/:userId')
+ */
 function getUserByID(req, res, next, id) {
   User.findById(id)
   .then((user) => {

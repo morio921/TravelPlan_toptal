@@ -1,25 +1,13 @@
-import { createAction, handleActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { omit, reject } from 'lodash';
 import { requestSuccess, requestFail } from '../api/request';
-
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const GET_USER = 'GET_USER';
-export const GET_USERS = 'GET_USERS';
-export const CREATE_USER = 'CREATE_USER';
-export const UPDATE_USER = 'UPDATE_USER';
-export const DELETE_USER = 'DELETE_USER';
-
-// ------------------------------------
-// Actions
-// ------------------------------------
-
-export const getUser = createAction(GET_USER);
-export const getUsers = createAction(GET_USERS);
-export const createUser = createAction(CREATE_USER);
-export const updateUser = createAction(UPDATE_USER);
-export const deleteUser = createAction(DELETE_USER);
+import {
+  GET_USER,
+  GET_USERS,
+  CREATE_USER,
+  UPDATE_USER,
+  DELETE_USER,
+} from '../constants/user';
 
 const initialState = {
   user: null,
@@ -33,9 +21,6 @@ const initialState = {
   error: null
 };
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
 export default handleActions({
   [requestSuccess(GET_USER)]: (state, { payload }) => ({
     ...state,

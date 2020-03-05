@@ -7,7 +7,7 @@ import {
   CREATE_RECORD,
   UPDATE_RECORD,
   DELETE_RECORD
-} from '../modules/record';
+} from '../constants/record';
 import apiCall from '../api/apiCall';
 
 const doGetRecord = apiCall({

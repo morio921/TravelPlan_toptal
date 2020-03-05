@@ -1,7 +1,7 @@
 import Header from './Header';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { signout } from '../../redux/modules/auth';
+import { signout } from '../../redux/actions/auth';
 
 Header.propTypes = {
   auth: PropTypes.object,

@@ -8,7 +8,7 @@ import {
   ModalFooter
 } from 'reactstrap';
 
-const ConfirmModal = ({show, proceed, dismiss, cancel, confirmation, options}) => (
+const ConfirmModal = ({show, proceed, dismiss, cancel, confirmation}) => (
   <Modal isOpen={show} toggle={dismiss}>
     <ModalHeader>
       {confirmation}

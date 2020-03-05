@@ -3,11 +3,14 @@ const Record = require('../models/record.model');
 const ROLES = require('../constants/role');
 const APIError = require('../utils/api-error');
 
+/**
+ * Create a new user (url: '/user', method: post)
+ */
 function create(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
 
   if(!firstName || !lastName || !email  || !password || !role) {
-    throw new APIError('Firstname, lastname, email, password, or role is required', 401);
+    throw new APIError('Firstname, lastname, email, password, or role is required', 400);
   }
 
   const user = new User({
@@ -28,6 +31,9 @@ function create(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Update a user (url: '/user/:userId', method: put)
+ */
 function update(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
   const oldUserName = req.userModel.firstName + ' ' + req.userModel.lastName;
@@ -59,17 +65,24 @@ function update(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Read a user information (url: '/user/:userId', method: get)
+ */
 function read(req, res) {
   res.json(req.userModel);
 }
 
+/**
+ * Read all user (url: '/user', method: get)
+ */
 function list(req, res, next) {
   const page_size = parseInt(req.query.page_size);
   const page = parseInt(req.query.page);
 
   let query = {};
   if(req.user.role === ROLES.MANAGER) {
-    query = { role: { $ne: ROLES.ADMIN } };   //For getting users except admin users
+    // For getting users except admin users
+    query = { role: { $ne: ROLES.ADMIN } };
   }
 
   User.find(query)
@@ -90,6 +103,9 @@ function list(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Remove a user (url: '/user/:userId', method: delete)
+ */
 function remove(req, res, next) {
   req.userModel.remove()
     .then(() => {
@@ -104,6 +120,9 @@ function remove(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Get a user information by user id (url: '/:userId')
+ */
 function getUserByID(req, res, next, id) {
   User.findById(id)
   .then((user) => {

@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { authStateSelector } from '../../../redux/selectors';
-import { signup } from '../../../redux/modules/auth';
+import { signup } from '../../../redux/actions/auth';
 
 Signup.propTypes = {
   auth: PropTypes.object,

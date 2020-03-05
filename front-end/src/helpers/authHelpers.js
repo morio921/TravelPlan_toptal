@@ -1,7 +1,7 @@
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect';
 import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper';
-import { DO_SIGNIN } from '../redux/modules/auth';
+import { DO_SIGNIN } from '../redux/constants/auth';
 import { requestPending } from '../redux/api/request';
 import { isAdmin, isManager } from './roleHelpers';
 import Logging from '../components/Logging';

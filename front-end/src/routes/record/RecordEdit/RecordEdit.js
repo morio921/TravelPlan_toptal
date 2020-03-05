@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { getDateStr } from '../../../helpers';
 import { requestSuccess } from '../../../redux/api/request';
-import { UPDATE_RECORD, CREATE_RECORD } from '../../../redux/modules/record';
+import { UPDATE_RECORD, CREATE_RECORD } from '../../../redux/constants/record';
 import { RecordEditSchema } from '../../../helpers/validationHelpers';
 
 class RecordEdit extends Component {

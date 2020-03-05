@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { reducer as form } from 'redux-form';
 
-import auth from './modules/auth';
-import user from './modules/user';
-import record from './modules/record';
+import auth from './auth';
+import user from './user';
+import record from './record';
 
 export default combineReducers({
   auth,

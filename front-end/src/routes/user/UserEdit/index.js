@@ -8,7 +8,7 @@ import {
   createUser,
   getUser,
   updateUser
-} from '../../../redux/modules/user';
+} from '../../../redux/actions/user';
 import * as selectors from '../../../redux/selectors';
 
 UserEdit.propTypes = {

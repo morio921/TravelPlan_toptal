@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { isManager } from '../../../helpers/roleHelpers';
 import { requestSuccess } from '../../../redux/api/request';
-import { UPDATE_USER, CREATE_USER } from '../../../redux/modules/user';
+import { UPDATE_USER, CREATE_USER } from '../../../redux/constants/user';
 import { UserAddSchema, UserEditSchema } from '../../../helpers/validationHelpers';
 
 let roleOptions = [

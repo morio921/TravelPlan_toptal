@@ -1,0 +1,11 @@
+export const GET_RECORD = 'GET_RECORD';
+
+export const GET_RECORDS = 'GET_RECORDS';
+
+export const GET_FUTURE_RECORDS = 'GET_FUTURE_RECORDS';
+
+export const CREATE_RECORD = 'CREATE_RECORD';
+
+export const UPDATE_RECORD = 'UPDATE_RECORD';
+
+export const DELETE_RECORD = 'DELETE_RECORD';

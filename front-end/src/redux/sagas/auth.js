@@ -1,5 +1,9 @@
 import { takeLatest } from 'redux-saga/effects';
-import { DO_SIGNIN, DO_SIGNUP, DO_UPDATE_PROFILE } from '../modules/auth';
+import {
+  DO_SIGNIN,
+  DO_SIGNUP,
+  DO_UPDATE_PROFILE
+} from '../constants/auth';
 import apiCall from '../api/apiCall';
 
 const doSignin = apiCall({

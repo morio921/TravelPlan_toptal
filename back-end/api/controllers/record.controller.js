@@ -2,6 +2,9 @@ const Record = require('../models/record.model');
 const ROLES = require('../constants/role');
 const APIError = require('../utils/api-error');
 
+/**
+ * Create a new record (url: '/record', method: post)
+ */
 function create(req, res, next) {
   const record = new Record(req.body);
 
@@ -15,6 +18,9 @@ function create(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Update a record by record ID (url: '/record/:recordId', method: put)
+ */
 function update(req, res, next) {
   Object.assign(req.record, req.body);
 
@@ -28,14 +34,20 @@ function update(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Read a record by record ID (url: '/record/:recordId', method: get)
+ */
 function read(req, res) {
   res.json(req.record);
 }
 
+/**
+ * Read all records by filtering and pagination variables (url: '/record', method: get)
+ */
 function list(req, res, next) {
+  const { userName, fromDate, toDate } = req.query;
   const page_size = parseInt(req.query.page_size);
   const page = parseInt(req.query.page);
-  const { userName, fromDate, toDate } = req.query;
 
   let query = {};
   if(req.user.role === ROLES.USER || req.user.role === ROLES.USER_MANAGER) {
@@ -70,6 +82,9 @@ function list(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Read records for the next month using pagination variables (url: '/record/future', method: get)
+ */
 function futureList(req, res, next) {
   const page_size = parseInt(req.query.page_size);
   const page = parseInt(req.query.page);
@@ -103,6 +118,9 @@ function futureList(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Remove a record by record ID (url: '/record/:recordId', method: delete)
+ */
 function remove(req, res, next) {
   req.record.remove()
     .then(() => {
@@ -111,6 +129,9 @@ function remove(req, res, next) {
     .catch(next);
 }
 
+/**
+ * Get a record (url: '/:recordId')
+ */
 function getRecordById(req, res, next, id) {
   Record.findById(id)
     .then((record) => {

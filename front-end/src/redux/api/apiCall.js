@@ -23,7 +23,7 @@ const defaultHeaders = () => {
 
 export default ({
   type,
-  method, // one of 'get', 'post', 'put', 'delete'
+  method,
   path,
   headers,
   success,

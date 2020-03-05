@@ -13,7 +13,7 @@ import {
   CardBody,
 } from 'reactstrap';
 import { Formik } from 'formik';
-import { DO_SIGNIN } from '../../../redux/modules/auth';
+import { DO_SIGNIN } from '../../../redux/constants/auth';
 import { requestFail } from '../../../redux/api/request';
 import { SigninSchema } from '../../../helpers/validationHelpers';
 

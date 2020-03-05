@@ -1,27 +1,14 @@
-import { createAction, handleActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { requestSuccess, requestFail } from '../api/request';
 import { omit, reject } from 'lodash';
-
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const GET_RECORD = 'GET_RECORD';
-export const GET_RECORDS = 'GET_RECORDS';
-export const GET_FUTURE_RECORDS = 'GET_FUTURE_RECORDS';
-export const CREATE_RECORD = 'CREATE_RECORD';
-export const UPDATE_RECORD = 'UPDATE_RECORD';
-export const DELETE_RECORD = 'DELETE_RECORD';
-
-// ------------------------------------
-// Actions
-// ------------------------------------
-
-export const getRecord = createAction(GET_RECORD);
-export const getRecords = createAction(GET_RECORDS);
-export const getFutureRecords = createAction(GET_FUTURE_RECORDS);
-export const createRecord = createAction(CREATE_RECORD);
-export const updateRecord = createAction(UPDATE_RECORD);
-export const deleteRecord = createAction(DELETE_RECORD);
+import {
+  GET_RECORD,
+  GET_RECORDS,
+  GET_FUTURE_RECORDS,
+  CREATE_RECORD,
+  UPDATE_RECORD,
+  DELETE_RECORD,
+} from '../constants/record';
 
 const initialState = {
   record: null,
@@ -34,9 +21,6 @@ const initialState = {
   },
 };
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
 export default handleActions({
   [requestSuccess(GET_RECORD)]: (state, { payload }) => ({
     ...state,

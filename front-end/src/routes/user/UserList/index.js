@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import {
   getUsers,
   deleteUser
-} from '../../../redux/modules/user';
+} from '../../../redux/actions/user';
 import {
   usersListSelector,
   usersParamsSelector,

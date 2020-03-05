@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import { Formik } from 'formik';
 import { requestFail } from '../../../redux/api/request';
-import { DO_SIGNUP } from '../../../redux/modules/auth';
+import { DO_SIGNUP } from '../../../redux/constants/auth';
 import { UserAddSchema } from '../../../helpers/validationHelpers';
 
 class Signup extends Component {

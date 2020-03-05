@@ -15,7 +15,7 @@ import {
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import { requestSuccess } from '../../../redux/api/request';
-import { DO_UPDATE_PROFILE } from '../../../redux/modules/auth';
+import { DO_UPDATE_PROFILE } from '../../../redux/constants/auth';
 import { UserEditSchema } from '../../../helpers/validationHelpers';
 
 class Profile extends Component {

@@ -1,24 +1,11 @@
-import { createAction, handleActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { requestSuccess, requestFail } from '../api/request';
-
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const DO_SIGNIN = 'DO_SIGNIN';
-export const DO_SIGNUP = 'DO_SIGNUP';
-export const DO_SIGNOUT = 'DO_SIGNOUT';
-export const DO_UPDATE_PROFILE = 'DO_UPDATE_PROFILE';
-
-// ------------------------------------
-// Actions
-// ------------------------------------
-
-export const signin = createAction(DO_SIGNIN);
-export const signup = createAction(DO_SIGNUP);
-export const signout = createAction(DO_SIGNOUT, () => {
-  localStorage.removeItem('travel_plans_auth');
-});
-export const updateProfile = createAction(DO_UPDATE_PROFILE);
+import {
+  DO_SIGNIN,
+  DO_SIGNUP,
+  DO_SIGNOUT,
+  DO_UPDATE_PROFILE
+} from '../constants/auth';
 
 const getInitialState = () => {
   let authRestore = JSON.parse(localStorage.getItem('travel_plans_auth') || null)
@@ -35,9 +22,6 @@ const getInitialState = () => {
   }
 }
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
 export default handleActions({
   [requestSuccess(DO_SIGNIN)]: (state, { payload }) => ({
     ...state,

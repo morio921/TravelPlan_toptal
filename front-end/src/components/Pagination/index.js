@@ -1,3 +1,9 @@
-import Pagination from './Pagination'
+import Pagination from './Pagination';
+import PropTypes from 'prop-types';
 
-export default Pagination
+Pagination.propTypes = {
+  pagination: PropTypes.object,
+  setPagination: PropTypes.func,
+};
+
+export default Pagination;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   ButtonDropdown,
   Col,
@@ -14,11 +13,6 @@ import {
 import { getPageCount } from '../../helpers';
 
 export default class Pagination extends Component {
-  static propTypes = {
-    pagination: PropTypes.object,
-    setPagination: PropTypes.func,
-  };
-
   constructor(props) {
     super(props);
 

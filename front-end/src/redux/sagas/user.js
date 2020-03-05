@@ -6,7 +6,7 @@ import {
   CREATE_USER,
   UPDATE_USER,
   DELETE_USER
-} from '../modules/user';
+} from '../constants/user';
 import apiCall from '../api/apiCall';
 
 const doGetUser = apiCall({
