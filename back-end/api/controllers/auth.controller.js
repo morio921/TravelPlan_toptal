@@ -46,7 +46,6 @@ function signUp(req, res, next) {
   }
 
   if(firstName.indexOf(' ') >= 0 || lastName.indexOf(' ') >= 0) {
-    console.log("has whitespace");
     throw new APIError('FirstName or lastName can not include whitespace', 400);
   }
 

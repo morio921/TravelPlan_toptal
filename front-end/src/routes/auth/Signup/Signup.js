@@ -13,15 +13,16 @@ import {
   Alert
 } from 'reactstrap';
 import { Formik } from 'formik';
-import { requestSuccess, requestFail } from '../../../redux/api/request';
+import { requestFail } from '../../../redux/api/request';
 import { DO_SIGNUP } from '../../../redux/modules/auth';
 import { UserAddSchema } from '../../../helpers/validationHelpers';
 
 class Signup extends Component {
   handleSignup = (values) => {
-    const { signup } = this.props;
+    const { signup, history } = this.props;
     signup({
       body: values,
+      sucess: history.push('/signin')
     });
   }
 
@@ -31,9 +32,6 @@ class Signup extends Component {
     return (
       <Row>
         <Col sm={12} md={{ size: 6, offset: 3 }}>
-          {auth.status === requestSuccess(DO_SIGNUP) &&
-            <Alert className='alert-style' color='info'>User is created successfully!</Alert>
-          }
           {auth.status === requestFail(DO_SIGNUP) &&
             <Alert className='alert-style' color='danger'>{auth.error.data.message}</Alert>
           }

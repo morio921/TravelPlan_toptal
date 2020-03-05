@@ -28,7 +28,7 @@ class RecordEdit extends Component {
 
   handleSave = (values) => {
     const { createRecord, updateRecord, match: { params }, profile } = this.props;
-    console.log("RecordEdit", values);
+
     const finalValues = {
       comment: values.comment,
       destination: values.destination,
