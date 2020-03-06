@@ -15,7 +15,7 @@ import {
 import { Formik } from 'formik';
 import { DO_SIGNIN } from '../../../redux/constants/auth';
 import { requestFail } from '../../../redux/api/request';
-import { SigninSchema } from '../../../helpers/validationHelpers';
+import { SigninSchema, signinInitialValues } from '../../../helpers/validationHelpers';
 
 class Signin extends Component {
   handleSignin = (values) => {
@@ -41,10 +41,7 @@ class Signin extends Component {
             </CardHeader>
             <CardBody>
               <Formik
-                initialValues = {{
-                  email: '',
-                  password: '',
-                }}
+                initialValues = {signinInitialValues}
                 validationSchema={SigninSchema}
                 onSubmit={this.handleSignin}
               >

@@ -13,6 +13,10 @@ function create(req, res, next) {
     throw new APIError('Firstname, lastname, email, password, or role is required', 400);
   }
 
+  if(req.user.role === ROLES.USER) {
+    throw new APIError('Regular User can not create a new user', 400);
+  }
+
   const user = new User({
     firstName, lastName, email, password
   });
@@ -37,6 +41,10 @@ function create(req, res, next) {
 function update(req, res, next) {
   const { firstName, lastName, email, password, role } = req.body;
   const oldUserName = req.userModel.firstName + ' ' + req.userModel.lastName;
+
+  if(req.user.role === ROLES.USER) {
+    throw new APIError('Regular User can not update a user', 400);
+  }
 
   Object.assign(req.userModel, {
     firstName, lastName, email
@@ -79,6 +87,10 @@ function list(req, res, next) {
   const page_size = parseInt(req.query.page_size);
   const page = parseInt(req.query.page);
 
+  if(req.user.role === ROLES.USER) {
+    throw new APIError('Regular User can not get the user list', 400);
+  }
+
   let query = {};
   if(req.user.role === ROLES.MANAGER) {
     // For getting users except admin users
@@ -107,6 +119,10 @@ function list(req, res, next) {
  * Remove a user (url: '/user/:userId', method: delete)
  */
 function remove(req, res, next) {
+  if(req.user.role === ROLES.USER) {
+    throw new APIError('Regular User can not delete the user', 400);
+  }
+
   req.userModel.remove()
     .then(() => {
       const userFullName = req.userModel.firstName + ' ' + req.userModel.lastName;

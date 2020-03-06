@@ -61,3 +61,38 @@ export const RecordFilterSchema = Yup.object().shape({
       return true;
     })
 });
+
+export const signinInitialValues = {
+  email: '',
+  password: '',
+};
+
+export const signupInitialValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirm_password: ''
+};
+
+export const userInitialValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  role: 'user',
+  password: '',
+  confirm_password: ''
+};
+
+export const recordInitialValues = {
+  destination: '',
+  startDate: '',
+  endDate: '',
+  comment: ''
+};
+
+export const filterInitialValues = {
+  userName: '',
+  fromDate: '',
+  toDate: '',
+};

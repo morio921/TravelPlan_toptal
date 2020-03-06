@@ -23,7 +23,7 @@ import { getDateStr } from '../../../helpers';
 import { isAdmin } from '../../../helpers/roleHelpers';
 import confirm from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
-import { RecordFilterSchema } from '../../../helpers/validationHelpers';
+import { RecordFilterSchema, filterInitialValues } from '../../../helpers/validationHelpers';
 
 class RecordList extends Component {
   componentDidMount() {
@@ -88,11 +88,7 @@ class RecordList extends Component {
         <Row className='text-right mb-3'>
           <Col md={10} xs={12}>
             <Formik
-              initialValues = {{
-                userName: '',
-                fromDate: '',
-                toDate: '',
-              }}
+              initialValues = {filterInitialValues}
               validationSchema={RecordFilterSchema}
               onSubmit={this.handleFilter}
             >

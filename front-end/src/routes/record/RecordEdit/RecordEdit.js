@@ -18,7 +18,7 @@ import moment from 'moment';
 import { getDateStr } from '../../../helpers';
 import { requestSuccess } from '../../../redux/api/request';
 import { UPDATE_RECORD, CREATE_RECORD } from '../../../redux/constants/record';
-import { RecordEditSchema } from '../../../helpers/validationHelpers';
+import { RecordEditSchema, recordInitialValues } from '../../../helpers/validationHelpers';
 
 class RecordEdit extends Component {
   componentDidMount() {
@@ -70,12 +70,7 @@ class RecordEdit extends Component {
                   startDate: moment(recordState.record.startDate).format('YYYY-MM-DD'),
                   endDate: moment(recordState.record.endDate).format('YYYY-MM-DD'),
                   comment: recordState.record.comment
-                } : {
-                  destination: '',
-                  startDate: '',
-                  endDate: '',
-                  comment: ''
-                }}
+                } : recordInitialValues}
                 validationSchema={RecordEditSchema}
                 onSubmit={this.handleSave}
                 enableReinitialize

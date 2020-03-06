@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { isManager } from '../../../helpers/roleHelpers';
 import { requestSuccess } from '../../../redux/api/request';
 import { UPDATE_USER, CREATE_USER } from '../../../redux/constants/user';
-import { UserAddSchema, UserEditSchema } from '../../../helpers/validationHelpers';
+import { UserAddSchema, UserEditSchema, userInitialValues } from '../../../helpers/validationHelpers';
 
 let roleOptions = [
   { 'value': 'user', 'label': 'User' },
@@ -74,14 +74,7 @@ class UserEdit extends Component {
                   role: userState.user.role,
                   password: '',
                   confirm_password: ''
-                } : {
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  role: 'user',
-                  password: '',
-                  confirm_password: ''
-                }}
+                } : userInitialValues}
                 validationSchema={params.id ? UserEditSchema : UserAddSchema}
                 onSubmit={this.handleSave}
                 enableReinitialize
